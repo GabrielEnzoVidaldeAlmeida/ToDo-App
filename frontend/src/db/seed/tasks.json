@@ -1,0 +1,18 @@
+{
+  "tasks": [
+    {
+      "id": "1",
+      "title": "Deixar Ravi na escola",
+      "content": "Deixar Ravi na escola logo depois que ele terminar de se arrumar. É importante ficar pronto para a academia antes de ir deixar ele.",
+      "createdAt": "2025-04-08T00:24:38.616Z",
+      "priority": "alta"
+    },
+    {
+      "id": "2",
+      "title": "Deixar Ravi na escola",
+      "content": "Deixar Ravi na escola logo depois que ele terminar de se arrumar. É importante ficar pronto para a academia antes de ir deixar ele.",
+      "createdAt": "2025-04-08T00:24:38.616Z",
+      "priority": "média"
+    }
+  ]
+}
