@@ -5,14 +5,16 @@
       "title": "Deixar Ravi na escola",
       "content": "Deixar Ravi na escola logo depois que ele terminar de se arrumar. É importante ficar pronto para a academia antes de ir deixar ele.",
       "createdAt": "2025-04-08T00:24:38.616Z",
-      "priority": "alta"
+      "priority": "alta",
+      "done": true
     },
     {
       "id": "2",
       "title": "Deixar Ravi na escola",
       "content": "Deixar Ravi na escola logo depois que ele terminar de se arrumar. É importante ficar pronto para a academia antes de ir deixar ele.",
       "createdAt": "2025-04-08T00:24:38.616Z",
-      "priority": "média"
+      "priority": "média",
+      "done": false
     }
   ]
 }
