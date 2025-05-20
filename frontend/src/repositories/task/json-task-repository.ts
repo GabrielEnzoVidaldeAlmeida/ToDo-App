@@ -25,6 +25,18 @@ export class JsonTaskRepository implements TaskRepository {
     return tasks;
   }
 
+  async findDone(): Promise<TaskModel[]> {
+    const tasks = await this.findAll();
+    const taskDone = tasks.filter((task) => task.done);
+    return taskDone;
+  }
+
+  async findPending(): Promise<TaskModel[]> {
+    const tasks = await this.findAll();
+    const taskPending = tasks.filter((task) => !task.done);
+    return taskPending;
+  }
+
   async findById(id: string): Promise<TaskModel> {
     const tasks = await this.findAll();
     const task = tasks.find((task) => task.id === id);
@@ -39,6 +51,14 @@ export class JsonTaskRepository implements TaskRepository {
 
 // (async () => {
 //   const repo = new JsonTaskRepository();
+
+//   try {
+//     const tasks = await repo.findByPending();
+//     console.log("Tarefas encontradas:", tasks);
+//   } catch (error) {
+//     console.error("Erro ao buscar tarefas:", error);
+//   }
+// })();
 
 //   try {
 //     const tasks = await repo.findAll();
