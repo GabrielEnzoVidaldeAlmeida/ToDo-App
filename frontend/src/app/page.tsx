@@ -26,10 +26,6 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
   return (
     <div className="px-4">
-      <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold">
-        Olá, Gabriel Enzo
-      </h1>
-
       <div className="flex gap-2 my-4">
         <FilterTasks
           linkProps={{ href: "/?filter=all" }}
