@@ -5,7 +5,7 @@ export default function NotFoundPage() {
   return (
     <div
       className={clsx(
-        "min-h-screen bg-gray-300 text-black",
+        "min-h-screen bg-black text-white",
         "flex items-center justify-center",
         "text-center"
       )}
@@ -20,7 +20,7 @@ export default function NotFoundPage() {
           Retornar para{" "}
           <Link
             href="/"
-            className="underline hover:decoration-black hover:text-blue-700"
+            className="underline hover:decoration-white hover:text-blue-700"
           >
             página inicial
           </Link>

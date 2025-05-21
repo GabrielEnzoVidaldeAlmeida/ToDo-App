@@ -7,10 +7,11 @@ type PriorityBadgeProps = {
 export function PriorityBadge({ priority }: PriorityBadgeProps) {
   return (
     <label
-      className={clsx("my-1 rounded w-20 text-center", {
-        "bg-red-500": priority === "alta",
-        "bg-yellow-500": priority === "média",
-        "bg-blue-500": priority === "baixa",
+      className={clsx(" rounded w-20 text-center", {
+        "bg-red-300 border-2 border-red-400 text-sm": priority === "Urgente",
+        "bg-yellow-300 border-2 border-yellow-400 text-sm":
+          priority === "Normal",
+        "bg-blue-300 border-2 border-blue-400 text-sm": priority === "Eventual",
       })}
     >
       {priority}

@@ -1,4 +1,4 @@
-import { BadgeCheckIcon, BadgeXIcon } from "lucide-react";
+import { BadgeCheckIcon } from "lucide-react";
 
 type StatusIconProps = {
   done: boolean;
@@ -8,9 +8,9 @@ export function StatusIcon({ done }: StatusIconProps) {
   return (
     <p>
       {done ? (
-        <BadgeCheckIcon className="fill-green-500" />
+        <BadgeCheckIcon className="fill-green-500 cursor-pointer" />
       ) : (
-        <BadgeXIcon className="fill-red-500" />
+        <BadgeCheckIcon className="cursor-pointer" />
       )}
     </p>
   );

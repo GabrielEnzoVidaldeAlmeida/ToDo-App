@@ -7,7 +7,7 @@ type TasksListProps = {
 
 export function TasksList({ tasks }: TasksListProps) {
   return (
-    <ul className="list-none">
+    <ul className="list-none flex flex-wrap gap-8 ">
       {tasks.map((task) => (
         <li key={task.id}>
           <TaskCard task={task} />
