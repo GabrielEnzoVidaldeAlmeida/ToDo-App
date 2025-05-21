@@ -9,7 +9,7 @@ type TaskCardProps = {
 
 export function TaskCard({ task }: TaskCardProps) {
   return (
-    <div className="mt-2  w-80 rounded shadow-[0_1px_4px_rgba(0,0,0,0.6)] hover:scale-102 transition">
+    <div className="mt-2 w-70 rounded shadow-[0_1px_4px_rgba(0,0,0,0.6)] hover:scale-102 transition">
       <div className="flex justify-between py-2 items-center px-4 border-b-2">
         <h2 className=" w-50 truncate text-xl" title={task.title}>
           {task.title}
@@ -23,14 +23,12 @@ export function TaskCard({ task }: TaskCardProps) {
       <div className="flex items-center justify-between pt-1 pb-1 px-4 rounded-b bg-gray-300">
         <div className="py-2">
           <div>
-            <p className="text-sm border-1 px-1 rounded">
-              19/05/2025 às 22h34m
-            </p>
+            <p className="text-sm border-1 px-1 rounded">19/05/2025 - 22:34</p>
           </div>
         </div>
 
-        <div className="flex gap-2">
-          <PencilIcon className="stroke-blue-800 cursor-pointer" />
+        <div className="flex gap-4">
+          <PencilIcon className="stroke-blue-800  cursor-pointer" />
           <TrashIcon className="stroke-red-800 cursor-pointer" />
           <StatusIcon done={task.done} />
         </div>

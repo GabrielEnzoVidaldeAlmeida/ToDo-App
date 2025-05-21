@@ -1,5 +1,6 @@
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
+import { MainContainer } from "@/components/MainContainer";
 
 export default function ContentLayout({
   children,
@@ -9,7 +10,9 @@ export default function ContentLayout({
   return (
     <div className="flex flex-col min-h-screen">
       <Nav />
-      <main className="flex-1">{children}</main>
+      <MainContainer>
+        <main className="flex-1">{children}</main>
+      </MainContainer>
       <Footer />
     </div>
   );

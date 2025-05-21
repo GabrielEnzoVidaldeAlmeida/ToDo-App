@@ -25,8 +25,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   }
 
   return (
-    <div className="px-4 mb-4">
-      <div className="flex gap-2 my-4">
+    <div className="flex flex-col">
+      <div className="flex justify-center sm:justify-start gap-2 my-4">
         <FilterTasks
           linkProps={{ href: "/?filter=all" }}
           labelFilter="Todas"
