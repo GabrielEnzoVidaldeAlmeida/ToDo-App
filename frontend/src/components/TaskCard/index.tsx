@@ -2,6 +2,7 @@ import { TaskModel } from "@/models/task/task-model";
 import { PriorityBadge } from "../PriorityBadge";
 import { StatusIcon } from "../StatusIcon";
 import { PencilIcon, TrashIcon } from "lucide-react";
+import { formatDateTime, formatDistaceToNow } from "@/utils/format-datetime";
 
 type TaskCardProps = {
   task: TaskModel;
@@ -23,13 +24,18 @@ export function TaskCard({ task }: TaskCardProps) {
       <div className="flex items-center justify-between pt-1 pb-1 px-4 rounded-b bg-gray-300">
         <div className="py-2">
           <div>
-            <p className="text-sm border-1 px-1 rounded">19/05/2025 - 22:34</p>
+            <time
+              className="text-sm border-1 px-1 rounded"
+              title={formatDistaceToNow(task.createdAt)}
+            >
+              {formatDateTime(task.createdAt)}
+            </time>
           </div>
         </div>
 
         <div className="flex gap-4">
-          <PencilIcon className="stroke-blue-800  cursor-pointer" />
-          <TrashIcon className="stroke-red-800 cursor-pointer" />
+          <PencilIcon className="stroke-blue-800 hover:scale-105 transition cursor-pointer" />
+          <TrashIcon className="stroke-red-800 hover:scale-105 transition cursor-pointer" />
           <StatusIcon done={task.done} />
         </div>
       </div>

@@ -8,9 +8,9 @@ export function StatusIcon({ done }: StatusIconProps) {
   return (
     <p>
       {done ? (
-        <BadgeCheckIcon className="fill-green-500 cursor-pointer" />
+        <BadgeCheckIcon className="fill-green-500 cursor-pointer hover:scale-105 transition" />
       ) : (
-        <BadgeCheckIcon className="cursor-pointer" />
+        <BadgeCheckIcon className="cursor-pointer hover:scale-105 transition" />
       )}
     </p>
   );
