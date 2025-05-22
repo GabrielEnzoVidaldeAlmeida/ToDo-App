@@ -1,6 +1,11 @@
 import { FilterTasks } from "@/components/FilterTasks";
 import { TasksList } from "@/components/TasksList";
-import { taskRepository } from "@/repositories/task";
+import {
+  findAllTasksCached,
+  findTasksDone,
+  findTasksPending,
+} from "@/libs/task/queries";
+
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 
@@ -17,13 +22,13 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
   switch (filter) {
     case "done":
-      tasks = await taskRepository.findDone();
+      tasks = await findTasksDone();
       break;
     case "pending":
-      tasks = await taskRepository.findPending();
+      tasks = await findTasksPending();
       break;
     case "all":
-      tasks = await taskRepository.findAll();
+      tasks = await findAllTasksCached();
   }
 
   return (
