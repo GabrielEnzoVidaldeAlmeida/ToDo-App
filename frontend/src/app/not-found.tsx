@@ -17,7 +17,7 @@ export default function NotFoundPage() {
           site
         </p>
         <p>
-          Retornar para{" "}
+          Retornar para
           <Link
             href="/"
             className="underline hover:decoration-white hover:text-blue-700"

@@ -12,7 +12,15 @@ const JSON_POSTS_FILE_PATH = resolve(
   "tasks.json"
 );
 
+const SIMULATE_WAIT_IN_MS = 1000;
+
 export class JsonTaskRepository implements TaskRepository {
+  private async simulateWait() {
+    if (SIMULATE_WAIT_IN_MS <= 0) return;
+
+    await new Promise((resolve) => setTimeout(resolve, SIMULATE_WAIT_IN_MS));
+  }
+
   private async readFromDisk(): Promise<TaskModel[]> {
     const jsonContent = await readFile(JSON_POSTS_FILE_PATH, "utf-8");
     const parsedJson = JSON.parse(jsonContent);
@@ -21,23 +29,31 @@ export class JsonTaskRepository implements TaskRepository {
   }
 
   async findAll(): Promise<TaskModel[]> {
+    await this.simulateWait();
+
     const tasks = await this.readFromDisk();
     return tasks;
   }
 
   async findDone(): Promise<TaskModel[]> {
+    await this.simulateWait();
+
     const tasks = await this.findAll();
     const taskDone = tasks.filter((task) => task.done);
     return taskDone;
   }
 
   async findPending(): Promise<TaskModel[]> {
+    await this.simulateWait();
+
     const tasks = await this.findAll();
     const taskPending = tasks.filter((task) => !task.done);
     return taskPending;
   }
 
   async findById(id: string): Promise<TaskModel> {
+    await this.simulateWait();
+
     const tasks = await this.findAll();
     const task = tasks.find((task) => task.id === id);
 

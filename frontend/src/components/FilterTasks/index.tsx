@@ -4,7 +4,7 @@ import Link from "next/link";
 type FilterTasksProps = {
   linkProps: React.ComponentProps<typeof Link>;
   labelFilter: string;
-  isActive: boolean;
+  isActive?: boolean;
 };
 
 export function FilterTasks({
