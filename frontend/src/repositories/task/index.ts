@@ -1,4 +1,4 @@
-import { JsonTaskRepository } from "./json-task-repository";
+import { DrizzleTaskRepository } from "./drizzle-task-repository";
 import { TaskRepository } from "./task-repository";
 
-export const taskRepository: TaskRepository = new JsonTaskRepository();
+export const taskRepository: TaskRepository = new DrizzleTaskRepository();
