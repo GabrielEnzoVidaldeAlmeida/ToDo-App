@@ -36,24 +36,18 @@ export class JsonTaskRepository implements TaskRepository {
   }
 
   async findDone(): Promise<TaskModel[]> {
-    await this.simulateWait();
-
     const tasks = await this.findAll();
     const taskDone = tasks.filter((task) => task.done);
     return taskDone;
   }
 
   async findPending(): Promise<TaskModel[]> {
-    await this.simulateWait();
-
     const tasks = await this.findAll();
     const taskPending = tasks.filter((task) => !task.done);
     return taskPending;
   }
 
   async findById(id: string): Promise<TaskModel> {
-    await this.simulateWait();
-
     const tasks = await this.findAll();
     const task = tasks.find((task) => task.id === id);
 

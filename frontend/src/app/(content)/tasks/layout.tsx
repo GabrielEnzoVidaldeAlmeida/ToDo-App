@@ -1,4 +1,3 @@
-// app/tasks/layout.tsx
 "use client";
 
 import { ReactNode } from "react";
@@ -16,25 +15,24 @@ export default function TasksLayout({ children }: TasksLayoutProps) {
 
   const activeFilter = pathname?.split("/")[2] || "all";
 
+  const filters = [
+    { label: "Todas", path: "all" },
+    { label: "Pendentes", path: "pending" },
+    { label: "Concluídas", path: "done" },
+  ];
+
   return (
     <div className="flex flex-col">
       <div className="flex flex-col sm:flex-row items-center justify-between">
         <div className="flex justify-center sm:justify-start gap-2 my-4">
-          <FilterTasks
-            linkProps={{ href: "/tasks/all" }}
-            labelFilter="Todas"
-            isActive={activeFilter === "all"}
-          />
-          <FilterTasks
-            linkProps={{ href: "/tasks/pending" }}
-            labelFilter="Pendentes"
-            isActive={activeFilter === "pending"}
-          />
-          <FilterTasks
-            linkProps={{ href: "/tasks/done" }}
-            labelFilter="Concluídas"
-            isActive={activeFilter === "done"}
-          />
+          {filters.map(({ label, path }) => (
+            <FilterTasks
+              key={path}
+              linkProps={{ href: `/tasks/${path}` }}
+              labelFilter={label}
+              isActive={activeFilter === path}
+            />
+          ))}
         </div>
 
         <Link

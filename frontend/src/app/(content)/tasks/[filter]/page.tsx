@@ -4,32 +4,31 @@ import {
   findTasksDone,
   findTasksPending,
 } from "@/libs/task/queries";
+import { TaskModel } from "@/models/task/task-model";
 import { notFound } from "next/navigation";
 
-type TasksPageProps = {
-  params: {
-    filter: string;
-  };
+type TaskFilterFn = () => Promise<TaskModel[]>;
+
+const filterFunctions: Record<string, TaskFilterFn> = {
+  done: findTasksDone,
+  pending: findTasksPending,
+  all: findAllTasksCached,
 };
 
-export default async function TasksPage({ params }: TasksPageProps) {
-  const filter = params.filter;
+export default async function TasksPage({
+  params,
+}: {
+  params: { filter: string };
+}) {
+  const { filter } = params;
 
-  let tasks;
+  const fetchTasks = filterFunctions[filter];
 
-  switch (filter) {
-    case "done":
-      tasks = await findTasksDone();
-      break;
-    case "pending":
-      tasks = await findTasksPending();
-      break;
-    case "all":
-      tasks = await findAllTasksCached();
-      break;
-    default:
-      notFound();
+  if (!fetchTasks) {
+    notFound();
   }
+
+  const tasks = await fetchTasks();
 
   return <TasksList tasks={tasks} />;
 }
