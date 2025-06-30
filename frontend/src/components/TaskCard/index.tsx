@@ -36,7 +36,7 @@ export function TaskCard({ task }: TaskCardProps) {
         <div className="flex gap-4">
           <PencilIcon className="stroke-blue-800 hover:scale-105 transition cursor-pointer" />
           <TrashIcon className="stroke-red-800 hover:scale-105 transition cursor-pointer" />
-          <StatusIcon done={task.done} />
+          <StatusIcon done={task.done} taskId={task.id} />
         </div>
       </div>
     </div>
