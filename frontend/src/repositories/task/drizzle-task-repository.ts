@@ -25,7 +25,7 @@ function mapPriority(priority: string): Priority {
     case "Urgente":
       return "Urgente";
     default:
-      return "Normal"; // ou lance erro
+      return "Normal";
   }
 }
 
