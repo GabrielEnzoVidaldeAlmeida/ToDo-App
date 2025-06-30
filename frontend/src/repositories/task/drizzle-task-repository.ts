@@ -17,18 +17,15 @@ import { asyncDelay } from "@/utils/async-delay";
 const SIMULATE_WAIT_IN_MS = 1000;
 
 function mapPriority(priority: string): Priority {
-  switch (priority.toLowerCase()) {
-    case "baixa":
-    case "normal":
-      return "baixa";
-    case "média":
-    case "eventual":
-      return "média";
-    case "alta":
-    case "urgente":
-      return "alta";
+  switch (priority) {
+    case "Normal":
+      return "Normal";
+    case "Eventual":
+      return "Eventual";
+    case "Urgente":
+      return "Urgente";
     default:
-      return "baixa"; // ou lance erro
+      return "Normal"; // ou lance erro
   }
 }
 

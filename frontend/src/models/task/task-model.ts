@@ -1,4 +1,4 @@
-export type Priority = "baixa" | "média" | "alta";
+export type Priority = "Eventual" | "Normal" | "Urgente";
 
 export type TaskModel = {
   id: string;
