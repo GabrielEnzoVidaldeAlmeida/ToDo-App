@@ -22,7 +22,7 @@ export default function TasksLayout({ children }: TasksLayoutProps) {
   ];
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col min-h-screen px-4 py-6">
       <div className="flex flex-col sm:flex-row items-center justify-between">
         <div className="flex justify-center sm:justify-start gap-2 my-4">
           {filters.map(({ label, path }) => (
@@ -36,7 +36,7 @@ export default function TasksLayout({ children }: TasksLayoutProps) {
         </div>
 
         <Link
-          href="#"
+          href="/tasks/nova"
           className="flex items-center gap-2 border-1 px-3 py-1 rounded bg-gray-200 hover:brightness-90 transition"
         >
           <PlusIcon className="w-4 h-4" />
@@ -44,7 +44,7 @@ export default function TasksLayout({ children }: TasksLayoutProps) {
         </Link>
       </div>
 
-      <div>{children}</div>
+      <div className="flex-1 flex flex-col">{children}</div>
     </div>
   );
 }
