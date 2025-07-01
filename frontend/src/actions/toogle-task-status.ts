@@ -6,6 +6,8 @@ import { eq } from "drizzle-orm";
 import { revalidateTag } from "next/cache";
 
 export async function toogleTaskStatus(id: string, currentDone: boolean) {
+  //TODO: Verificar usuário logado
+
   await drizzleDb
     .update(tasksTable)
     .set({ done: !currentDone })
