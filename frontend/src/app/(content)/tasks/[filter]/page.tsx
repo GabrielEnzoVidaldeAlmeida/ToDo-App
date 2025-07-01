@@ -1,4 +1,3 @@
-import { Button } from "@/components/Button";
 import { TasksList } from "@/components/TasksList";
 import {
   findAllTasksCached,
@@ -6,7 +5,6 @@ import {
   findTasksPending,
 } from "@/libs/task/queries";
 import { TaskModel } from "@/models/task/task-model";
-import { TrashIcon } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -56,12 +54,5 @@ export default async function TasksPage({
     );
   }
 
-  return (
-    <div>
-      <TasksList tasks={tasks} />{" "}
-      <Button variant="icon" sizes="icon" disabled>
-        <TrashIcon className="stroke-blue-500" />
-      </Button>
-    </div>
-  );
+  return <TasksList tasks={tasks} />;
 }

@@ -19,6 +19,7 @@ export function StatusIcon({ done, taskId }: StatusIconProps) {
   };
 
   return (
+    // TODO: Alterar classe button do HTML para meu componente Button
     <button
       onClick={handleClick}
       disabled={isPending}

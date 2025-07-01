@@ -77,6 +77,7 @@ export class DrizzleTaskRepository implements TaskRepository {
     return tasks;
   }
 
+  //TODO: Criar função findById e utilizar ela nas actions
   // async findById(id: string): Promise<TaskModel> {
   //   const tasks = await this.findAll();
   //   const task = tasks.find((task) => task.id === id);
