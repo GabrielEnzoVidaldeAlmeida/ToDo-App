@@ -86,6 +86,20 @@ export class DrizzleTaskRepository implements TaskRepository {
 
   //   return task;
   // }
+
+  async findById(id: string): Promise<TaskModel> {
+    await asyncDelay(SIMULATE_WAIT_IN_MS, true);
+
+    logColor("findById", Date.now());
+
+    const task = await drizzleDb.query.tasks.findFirst({
+      where: (tasks, { eq }) => eq(tasks.id, id),
+    });
+
+    if (!task) throw new Error("Tarefa não encontrada para ID");
+
+    return { ...task, priority: task.priority as Priority };
+  }
 }
 
 // ---TESTES---

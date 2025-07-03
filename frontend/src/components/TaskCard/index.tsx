@@ -4,6 +4,8 @@ import { StatusIcon } from "../StatusIcon";
 import { PencilIcon } from "lucide-react";
 import { formatDateTime, formatDistaceToNow } from "@/utils/format-datetime";
 import { TaskDeleteButton } from "../TaskDeleteButton";
+import Link from "next/link";
+// import { TaskUpdateButton } from "../TaskUpdateButton";
 
 type TaskCardProps = {
   task: TaskModel;
@@ -36,7 +38,10 @@ export function TaskCard({ task }: TaskCardProps) {
 
         <div className="flex gap-4">
           {/* TODO: Criar função de alterar task (PencilIcon) */}
-          <PencilIcon className="stroke-blue-800 hover:scale-105 transition cursor-pointer" />
+          {/* <TaskUpdateButton /> */}
+          <Link href={`/task/${task.id}`}>
+            <PencilIcon className="stroke-blue-800 hover:scale-105 transition cursor-pointer" />
+          </Link>
           <TaskDeleteButton id={task.id} />
           {/* TODO: Alterar o nome StatusIcon para algo como TaskStatusIcon */}
           <StatusIcon done={task.done} taskId={task.id} />

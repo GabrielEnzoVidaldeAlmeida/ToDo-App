@@ -1,11 +1,11 @@
 import clsx from "clsx";
 import { useId } from "react";
 
-type InputTextProps = {
+type InputTextAreaProps = {
   labelText?: string;
 } & React.ComponentProps<"textarea">;
 
-export function InputTextArea({ labelText, ...props }: InputTextProps) {
+export function InputTextArea({ labelText, ...props }: InputTextAreaProps) {
   const id = useId();
 
   return (
