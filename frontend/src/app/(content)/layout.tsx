@@ -1,6 +1,7 @@
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { MainContainer } from "@/components/MainContainer";
+import { ToastifyContainer } from "@/components/ToastifyContainer";
 
 export default function ContentLayout({
   children,
@@ -14,6 +15,8 @@ export default function ContentLayout({
         <main className="flex-1">{children}</main>
       </MainContainer>
       <Footer />
+
+      <ToastifyContainer />
     </div>
   );
 }

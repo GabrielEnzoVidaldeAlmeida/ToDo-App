@@ -4,6 +4,7 @@ import { deleteTaskAction } from "@/actions/delete-task-action";
 import { useTransition } from "react";
 import { Button } from "../Button";
 import { TrashIcon } from "lucide-react";
+import { toast } from "react-toastify";
 
 type TaskDeleteButtonProps = {
   id: string;
@@ -13,8 +14,12 @@ export function TaskDeleteButton({ id }: TaskDeleteButtonProps) {
   const [isDeleting, startTransition] = useTransition();
 
   const deleteTask = () => {
+    toast.dismiss();
+
     startTransition(() => {
       deleteTaskAction(id);
+
+      toast.success("Tarefa deletada com sucesso!");
     });
   };
 

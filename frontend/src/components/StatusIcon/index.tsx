@@ -3,6 +3,7 @@
 import { toogleTaskStatus } from "@/actions/toogle-task-status";
 import { BadgeCheckIcon } from "lucide-react";
 import { useTransition } from "react";
+import { toast } from "react-toastify";
 
 type StatusIconProps = {
   taskId: string;
@@ -13,8 +14,16 @@ export function StatusIcon({ done, taskId }: StatusIconProps) {
   const [isPending, startTransition] = useTransition();
 
   const handleClick = () => {
+    toast.dismiss();
+
     startTransition(() => {
       toogleTaskStatus(taskId, done);
+
+      if (done === true) {
+        toast.success("Status alterado para concluída!");
+      } else {
+        toast.success("Status alterado para pendente!");
+      }
     });
   };
 
