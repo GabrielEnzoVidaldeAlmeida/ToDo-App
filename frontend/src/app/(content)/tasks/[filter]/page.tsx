@@ -46,7 +46,7 @@ export default async function TasksPage({
         </p>
         {filter === "all" && (
           <Link
-            href="#"
+            href="/new"
             className="flex gap-2 items-center justify-center px-4 p-2 text-white bg-blue-600 rounded hover:bg-blue-700 font-bold transition"
           >
             <PlusIcon size={20} /> Criar nova tarefa

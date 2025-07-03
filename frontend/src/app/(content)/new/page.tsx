@@ -1,4 +1,5 @@
 import { InputText } from "@/components/InputText";
+import { InputTextArea } from "@/components/InputTextArea";
 
 export default function NewTaskPage() {
   return (
@@ -12,7 +13,7 @@ export default function NewTaskPage() {
           placeholder="Digite o título da tarefa"
         />
 
-        <InputText
+        <InputTextArea
           labelText="Conteúdo:"
           placeholder="Digite o conteúdo da tarefa"
         />
