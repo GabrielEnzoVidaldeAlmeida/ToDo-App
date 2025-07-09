@@ -16,8 +16,13 @@ export function TaskDeleteButton({ id }: TaskDeleteButtonProps) {
   const deleteTask = () => {
     toast.dismiss();
 
-    startTransition(() => {
-      deleteTaskAction(id);
+    startTransition(async () => {
+      const result = await deleteTaskAction(id);
+
+      if (result?.error) {
+        toast.error(result.error);
+        return;
+      }
 
       toast.success("Tarefa deletada com sucesso!");
     });

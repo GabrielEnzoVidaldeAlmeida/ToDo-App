@@ -20,9 +20,9 @@ export function StatusIcon({ done, taskId }: StatusIconProps) {
       toogleTaskStatus(taskId, done);
 
       if (done === true) {
-        toast.success("Status alterado para concluída!");
+        toast.warning("Status alterado para pendente!");
       } else {
-        toast.success("Status alterado para pendente!");
+        toast.success("Status alterado para concluída!");
       }
     });
   };

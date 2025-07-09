@@ -42,8 +42,10 @@ export const findTasksDone = cache(
   )
 );
 
-export const findByIdTask = cache(async (id: string) => {
-  return taskRepository.findById(id);
-});
-
 // export const findTasksDone = cache(async () => await taskRepository.findDone());
+
+export const findByIdTask = cache((id: string) =>
+  unstable_cache(() => taskRepository.findById(id), [`task-${id}`], {
+    tags: ["tasks"],
+  })()
+);
