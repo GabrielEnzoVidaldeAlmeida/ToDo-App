@@ -30,7 +30,12 @@ export function Nav() {
   return (
     <nav className="flex justify-between items-center bg-black text-white p-4">
       <h1 className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-extrabold">
-        Olá, Gabriel Enzo
+        <Link
+          href="/"
+          className="hover:cursor-pointer hover:brightness-90 transition"
+        >
+          ToDo App
+        </Link>
       </h1>
 
       <div className="relative flex items-center" ref={menuRef}>

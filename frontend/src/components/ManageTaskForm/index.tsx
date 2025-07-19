@@ -40,7 +40,7 @@ export default function ManageTaskForm({ task }: ManageTaskFormProps) {
         labelText="Nível"
         value={priority}
         onChange={(e) => setPriority(e.target.value as Priority)}
-        className="w-48"
+        className="w-48 hover:cursor-pointer"
       >
         <option value="Eventual">Eventual</option>
         <option value="Normal">Normal</option>
