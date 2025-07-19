@@ -4,11 +4,11 @@ export type CreateTask = Omit<TaskModel, "done">;
 
 export const makePartialTask = (task?: Partial<TaskModel>): TaskModel => {
   return {
-    id: task?.id || "",
-    title: task?.title || "",
-    content: task?.content || "",
-    createdAt: task?.createdAt || "",
-    priority: task?.priority || "Normal",
+    id: task?.id ?? "",
+    title: task?.title ?? "",
+    content: task?.content ?? "",
+    createdAt: task?.createdAt ?? "",
+    priority: task?.priority ?? "Normal",
     done: false,
   };
 };

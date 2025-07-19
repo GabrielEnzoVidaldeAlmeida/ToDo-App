@@ -5,8 +5,11 @@ import { Button } from "../Button";
 import InputDropdown from "../InputDropdown";
 import { InputText } from "../InputText";
 import { InputTextArea } from "../InputTextArea";
-import { useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { Priority } from "@/models/task/task-model";
+import { makePartialTask } from "@/dto/task/dto";
+import { createTaskAction } from "@/actions/create-task-action";
+import { toast } from "react-toastify";
 
 type Task = {
   id: string;
@@ -20,24 +23,44 @@ type ManageTaskFormProps = {
 };
 
 export default function ManageTaskForm({ task }: ManageTaskFormProps) {
+  const initialState = {
+    formState: makePartialTask(task),
+    errors: [],
+  };
+
+  const [state, action, isPending] = useActionState(
+    createTaskAction,
+    initialState
+  );
+
+  useEffect(() => {
+    if (state.errors.length > 0) {
+      toast.dismiss();
+      state.errors.forEach((error) => toast.error(error));
+    }
+  }, [state.errors]);
+
   const [priority, setPriority] = useState(task?.priority ?? "Normal");
 
   return (
-    <form className="flex flex-col gap-4 py-4 p-1 sm:px-8">
+    <form action={action} className="flex flex-col gap-4 py-4 p-1 sm:px-8">
       <InputText
         labelText="Título:"
+        name="title"
         placeholder="Digite o título da tarefa"
         defaultValue={task?.title}
       />
 
       <InputTextArea
         labelText="Conteúdo:"
+        name="content"
         placeholder="Digite o conteúdo da tarefa"
         defaultValue={task?.content}
       />
 
       <InputDropdown
         labelText="Nível"
+        name="priority"
         value={priority}
         onChange={(e) => setPriority(e.target.value as Priority)}
         className="w-48 hover:cursor-pointer"

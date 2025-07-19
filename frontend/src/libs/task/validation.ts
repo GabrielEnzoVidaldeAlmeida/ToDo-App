@@ -17,7 +17,7 @@ const TaskBaseSchema = z.object({
     .min(5, "Conteúdo é obrigatório!")
     .transform((val) => sanitize(val)),
 
-  priority: PriorityEnum.default("Normal"),
+  priority: PriorityEnum.optional().default("Normal"),
 });
 
 // TaskCreateSchema: igual ao base por enquanto
