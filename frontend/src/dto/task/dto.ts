@@ -1,6 +1,6 @@
 import { TaskModel } from "@/models/task/task-model";
 
-export type CreateTask = Omit<TaskModel, "updatedAt">;
+export type CreateTask = Omit<TaskModel, "updatedAt" | "done">;
 
 export const makePartialTask = (task?: Partial<TaskModel>): TaskModel => {
   return {
@@ -9,7 +9,7 @@ export const makePartialTask = (task?: Partial<TaskModel>): TaskModel => {
     content: task?.content || "",
     createdAt: task?.createdAt || "",
     priority: task?.priority || "Normal",
-    done: task?.done || false,
+    done: false,
   };
 };
 
