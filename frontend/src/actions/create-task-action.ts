@@ -63,5 +63,5 @@ export async function createTaskAction(
   }
 
   revalidateTag("tasks");
-  redirect("/");
+  redirect("/tasks/pending?created=1");
 }

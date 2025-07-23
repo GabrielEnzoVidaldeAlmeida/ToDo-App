@@ -29,7 +29,6 @@ export default async function TasksPage({
   params: { filter: string };
 }) {
   const { filter } = params;
-
   const fetchTasks = filterFunctions[filter];
 
   if (!fetchTasks) {
