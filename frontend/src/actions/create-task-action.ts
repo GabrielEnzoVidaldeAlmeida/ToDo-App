@@ -1,10 +1,9 @@
 "use server";
 
-import { drizzleDb } from "@/db/drizzle";
-import { tasksTable } from "@/db/drizzle/schemas";
 import { CreateTask, makePartialTask } from "@/dto/task/dto";
 import { TaskCreateSchema } from "@/libs/task/validation";
 import { TaskModel } from "@/models/task/task-model";
+import { taskRepository } from "@/repositories/task";
 import { getZodErrorMessages } from "@/utils/get-zod-error-messages";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
@@ -47,8 +46,21 @@ export async function createTaskAction(
     id: uuidV4(),
   };
 
-  //TODO: mover esse método para o repositório
-  await drizzleDb.insert(tasksTable).values(newTask);
+  try {
+    await taskRepository.create(newTask);
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      return {
+        formState: newTask,
+        errors: [e.message],
+      };
+    }
+
+    return {
+      formState: newTask,
+      errors: ["Erro desconhecido"],
+    };
+  }
 
   revalidateTag("tasks");
   redirect("/");

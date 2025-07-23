@@ -48,6 +48,7 @@ export default function ManageTaskForm({ task }: ManageTaskFormProps) {
         labelText="Título:"
         name="title"
         placeholder="Digite o título da tarefa"
+        disabled={isPending}
         defaultValue={task?.title}
       />
 
@@ -55,6 +56,7 @@ export default function ManageTaskForm({ task }: ManageTaskFormProps) {
         labelText="Conteúdo:"
         name="content"
         placeholder="Digite o conteúdo da tarefa"
+        disabled={isPending}
         defaultValue={task?.content}
       />
 
@@ -63,6 +65,7 @@ export default function ManageTaskForm({ task }: ManageTaskFormProps) {
         name="priority"
         value={priority}
         onChange={(e) => setPriority(e.target.value as Priority)}
+        disabled={isPending}
         className="w-48 hover:cursor-pointer"
       >
         <option value="Eventual">Eventual</option>

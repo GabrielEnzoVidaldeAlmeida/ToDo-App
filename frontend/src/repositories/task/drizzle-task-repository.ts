@@ -4,6 +4,7 @@ import { TaskRepository } from "./task-repository";
 import { logColor } from "@/utils/log-color";
 import { drizzleDb } from "@/db/drizzle";
 import { asyncDelay } from "@/utils/async-delay";
+import { tasksTable } from "@/db/drizzle/schemas";
 
 // const ROOT_DIR = process.cwd();
 // const JSON_POSTS_FILE_PATH = resolve(
@@ -99,6 +100,20 @@ export class DrizzleTaskRepository implements TaskRepository {
     if (!task) throw new Error("Tarefa não encontrada para ID");
 
     return { ...task, priority: task.priority as Priority };
+  }
+
+  async create(task: TaskModel): Promise<TaskModel> {
+    const taskExists = await drizzleDb.query.tasks.findFirst({
+      where: (tasks, { eq }) => eq(tasks.id, task.id),
+      columns: { id: true },
+    });
+
+    if (!!taskExists) {
+      throw new Error("Tarefa com ID já existe na base de dados");
+    }
+
+    await drizzleDb.insert(tasksTable).values(task);
+    return task;
   }
 }
 

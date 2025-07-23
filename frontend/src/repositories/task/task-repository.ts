@@ -5,4 +5,7 @@ export interface TaskRepository {
   findById(id: string): Promise<TaskModel>;
   findDone(): Promise<TaskModel[]>;
   findPending(): Promise<TaskModel[]>;
+
+  //Mutation
+  create(task: TaskModel): Promise<TaskModel>;
 }
