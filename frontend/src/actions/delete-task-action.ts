@@ -1,11 +1,6 @@
 "use server";
 
-import { drizzleDb } from "@/db/drizzle";
-import { tasksTable } from "@/db/drizzle/schemas";
 import { taskRepository } from "@/repositories/task";
-// import { asyncDelay } from "@/utils/async-delay";
-// import { logColor } from "@/utils/log-color";
-import { eq } from "drizzle-orm";
 import { revalidateTag } from "next/cache";
 
 export async function deleteTaskAction(id: string) {
@@ -17,15 +12,22 @@ export async function deleteTaskAction(id: string) {
     };
   }
 
-  const task = await taskRepository.findById(id).catch(() => undefined);
-
-  if (!task) {
+  try {
+    await taskRepository.delete(id);
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      return {
+        error: e.message,
+      };
+    }
     return {
-      error: "Tarefa não exista na base de dados",
+      error: "Erro desconhecido",
     };
   }
 
-  await drizzleDb.delete(tasksTable).where(eq(tasksTable.id, id));
-
   revalidateTag("tasks");
+
+  return {
+    error: "",
+  };
 }

@@ -5,6 +5,7 @@ import { logColor } from "@/utils/log-color";
 import { drizzleDb } from "@/db/drizzle";
 import { asyncDelay } from "@/utils/async-delay";
 import { tasksTable } from "@/db/drizzle/schemas";
+import { eq } from "drizzle-orm";
 
 // const ROOT_DIR = process.cwd();
 // const JSON_POSTS_FILE_PATH = resolve(
@@ -114,6 +115,25 @@ export class DrizzleTaskRepository implements TaskRepository {
 
     await drizzleDb.insert(tasksTable).values(task);
     return task;
+  }
+
+  async delete(id: string): Promise<TaskModel> {
+    const task = await drizzleDb.query.tasks.findFirst({
+      where: (tasks, { eq }) => eq(tasks.id, id),
+    });
+
+    if (!task) {
+      throw new Error("Tarefa não existe");
+    }
+
+    const taskValidPriority: TaskModel = {
+      ...task,
+      priority: task.priority as Priority,
+    };
+
+    await drizzleDb.delete(tasksTable).where(eq(tasksTable.id, id));
+
+    return taskValidPriority;
   }
 }
 

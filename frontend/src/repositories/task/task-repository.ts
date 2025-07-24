@@ -8,4 +8,5 @@ export interface TaskRepository {
 
   //Mutation
   create(task: TaskModel): Promise<TaskModel>;
+  delete(id: string): Promise<TaskModel>;
 }
