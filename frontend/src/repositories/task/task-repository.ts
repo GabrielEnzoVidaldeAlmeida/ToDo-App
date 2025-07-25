@@ -9,4 +9,8 @@ export interface TaskRepository {
   //Mutation
   create(task: TaskModel): Promise<TaskModel>;
   delete(id: string): Promise<TaskModel>;
+  update(
+    id: string,
+    newTaskData: Omit<TaskModel, "id" | "createdAt" | "done">
+  ): Promise<TaskModel>;
 }

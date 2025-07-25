@@ -18,7 +18,7 @@ export default async function UpdateTaskPage({ params }: UpdateTaskPageProps) {
         Atualizar tarefa
       </h2>
 
-      <ManageTaskForm task={task} />
+      <ManageTaskForm mode="update" task={task} />
     </div>
   );
 }

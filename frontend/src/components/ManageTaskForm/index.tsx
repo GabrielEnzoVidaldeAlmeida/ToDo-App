@@ -9,6 +9,7 @@ import { useActionState, useEffect, useState } from "react";
 import { Priority } from "@/models/task/task-model";
 import { makePartialTask } from "@/dto/task/dto";
 import { createTaskAction } from "@/actions/create-task-action";
+import { updateTaskAction } from "@/actions/update-task-action"; // <- certifique-se de criar/importar isso
 import { toast } from "react-toastify";
 
 type Task = {
@@ -18,18 +19,36 @@ type Task = {
   priority: Priority;
 };
 
-type ManageTaskFormProps = {
-  task?: Task;
+type ManageTaskFormUpdateProps = {
+  mode: "update";
+  task: Task;
 };
 
-export default function ManageTaskForm({ task }: ManageTaskFormProps) {
+type ManageTaskFormCreateProps = {
+  mode: "create";
+};
+
+type ManageTaskFormProps =
+  | ManageTaskFormCreateProps
+  | ManageTaskFormUpdateProps;
+
+export default function ManageTaskForm(props: ManageTaskFormProps) {
+  const { mode } = props;
+
+  const task = mode === "update" ? props.task : undefined;
+
+  const actionsMap = {
+    update: updateTaskAction,
+    create: createTaskAction,
+  };
+
   const initialState = {
     formState: makePartialTask(task),
     errors: [],
   };
 
   const [state, action, isPending] = useActionState(
-    createTaskAction,
+    actionsMap[mode],
     initialState
   );
 
@@ -40,16 +59,32 @@ export default function ManageTaskForm({ task }: ManageTaskFormProps) {
     }
   }, [state.errors]);
 
+  useEffect(() => {
+    if (state.success) {
+      toast.dismiss();
+      toast.success(
+        mode === "update"
+          ? "Tarefa atualizada com sucesso!"
+          : "Tarefa criada com sucesso!"
+      );
+    }
+  }, [state.success, mode]);
+
+  const { formState } = state;
   const [priority, setPriority] = useState(task?.priority ?? "Normal");
 
   return (
     <form action={action} className="flex flex-col gap-4 py-4 p-1 sm:px-8">
+      {mode === "update" && (
+        <input type="hidden" name="id" value={formState.id} />
+      )}
+
       <InputText
         labelText="Título:"
         name="title"
         placeholder="Digite o título da tarefa"
         disabled={isPending}
-        defaultValue={task?.title}
+        defaultValue={formState.title}
       />
 
       <InputTextArea
@@ -57,7 +92,7 @@ export default function ManageTaskForm({ task }: ManageTaskFormProps) {
         name="content"
         placeholder="Digite o conteúdo da tarefa"
         disabled={isPending}
-        defaultValue={task?.content}
+        defaultValue={formState.content}
       />
 
       <InputDropdown
@@ -73,8 +108,14 @@ export default function ManageTaskForm({ task }: ManageTaskFormProps) {
         <option value="Urgente">Urgente</option>
       </InputDropdown>
 
-      <Button type="submit" variant="default" sizes="md" className="mt-4 w-fit">
-        {task ? (
+      <Button
+        type="submit"
+        variant="default"
+        sizes="md"
+        className="mt-4 w-fit"
+        disabled={isPending}
+      >
+        {mode === "update" ? (
           <>
             <EditIcon /> Atualizar tarefa
           </>

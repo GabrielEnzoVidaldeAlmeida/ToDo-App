@@ -1,26 +1,22 @@
 "use server";
 
-import { CreateTask, makePartialTask } from "@/dto/task/dto";
-import { TaskCreateSchema } from "@/libs/task/validation";
-import { TaskModel } from "@/models/task/task-model";
+import { CreateTask, makePartialTask, makeTask } from "@/dto/task/dto";
+import { TaskUpdateSchema } from "@/libs/task/validation";
 import { taskRepository } from "@/repositories/task";
 import { getZodErrorMessages } from "@/utils/get-zod-error-messages";
-import { logColor } from "@/utils/log-color";
 import { revalidateTag } from "next/cache";
-import { redirect } from "next/navigation";
-import { v4 as uuidV4 } from "uuid";
 
-type CreateTaskActionState = {
+type UpdateTaskActionState = {
   formState: CreateTask;
   errors: string[];
   success?: true;
 };
 
-export async function createTaskAction(
-  prevState: CreateTaskActionState,
+export async function updateTaskAction(
+  prevState: UpdateTaskActionState,
   formData: FormData
-): Promise<CreateTaskActionState> {
-  //TODO: Verificar se o usuário está logado
+): Promise<UpdateTaskActionState> {
+  //TODO: Verificar se usuário está logado
 
   if (!(formData instanceof FormData)) {
     return {
@@ -29,10 +25,17 @@ export async function createTaskAction(
     };
   }
 
-  logColor("CREATE");
+  const id = formData.get("id")?.toString() || "";
+
+  if (!id || typeof id !== "string") {
+    return {
+      formState: prevState.formState,
+      errors: ["ID inválido"],
+    };
+  }
 
   const formDataToObj = Object.fromEntries(formData.entries());
-  const zodParsedObj = TaskCreateSchema.safeParse(formDataToObj);
+  const zodParsedObj = TaskUpdateSchema.safeParse(formDataToObj);
 
   if (!zodParsedObj.success) {
     const errors = getZodErrorMessages(zodParsedObj.error.format());
@@ -43,29 +46,32 @@ export async function createTaskAction(
   }
 
   const validTaskData = zodParsedObj.data;
-  const newTask: TaskModel = {
+  const newTask = {
     ...validTaskData,
-    createdAt: new Date().toISOString(),
-    done: false,
-    id: uuidV4(),
   };
 
+  let task;
   try {
-    await taskRepository.create(newTask);
+    task = await taskRepository.update(id, newTask);
   } catch (e: unknown) {
     if (e instanceof Error) {
       return {
-        formState: newTask,
+        formState: makePartialTask(formDataToObj),
         errors: [e.message],
       };
     }
 
     return {
-      formState: newTask,
-      errors: ["Erro desconhecido"],
+      formState: makePartialTask(formDataToObj),
+      errors: ["Error desconhecido"],
     };
   }
 
   revalidateTag("tasks");
-  redirect("/tasks/pending?created=1");
+
+  return {
+    formState: makeTask(task),
+    errors: [],
+    success: true,
+  };
 }

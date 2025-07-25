@@ -135,6 +135,34 @@ export class DrizzleTaskRepository implements TaskRepository {
 
     return taskValidPriority;
   }
+
+  async update(
+    id: string,
+    newTaskData: Omit<TaskModel, "id" | "createdAt" | "done">
+  ): Promise<TaskModel> {
+    const oldTask = await drizzleDb.query.tasks.findFirst({
+      where: (tasks, { eq }) => eq(tasks.id, id),
+    });
+
+    if (!oldTask) {
+      throw new Error("Tarefa não existe");
+    }
+
+    const taskData = {
+      title: newTaskData.title,
+      content: newTaskData.content,
+      priority: newTaskData.priority,
+    };
+    await drizzleDb
+      .update(tasksTable)
+      .set(taskData)
+      .where(eq(tasksTable.id, id));
+
+    return {
+      ...oldTask,
+      ...taskData,
+    };
+  }
 }
 
 // ---TESTES---

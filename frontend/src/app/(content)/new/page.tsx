@@ -7,7 +7,7 @@ export default function NewTaskPage() {
         Criar tarefa
       </h2>
 
-      <ManageTaskForm />
+      <ManageTaskForm mode="create" />
     </div>
   );
 }
