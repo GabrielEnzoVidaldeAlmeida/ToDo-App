@@ -3,6 +3,7 @@ import { Footer } from "@/components/Footer";
 import { MainContainer } from "@/components/MainContainer";
 import { ToastifyContainer } from "@/components/ToastifyContainer";
 import { SearchCreated } from "@/components/SearchCreated";
+import { Suspense } from "react";
 
 export default function ContentLayout({
   children,
@@ -15,7 +16,9 @@ export default function ContentLayout({
       <MainContainer>
         <main className="flex-1">
           {children}
-          <SearchCreated />
+          <Suspense fallback={null}>
+            <SearchCreated />
+          </Suspense>
         </main>
       </MainContainer>
       <Footer />
