@@ -23,12 +23,16 @@ const filterFunctions: Record<string, TaskFilterFn> = {
   all: findAllTasksCached,
 };
 
+export async function generateStaticParams() {
+  return [{ filter: "all" }, { filter: "done" }, { filter: "pending" }];
+}
+
 export default async function TasksPage({
   params,
 }: {
-  params: { filter: string };
+  params: Promise<{ filter: "all" | "done" | "pending" }>;
 }) {
-  const { filter } = params;
+  const { filter } = await params;
   const fetchTasks = filterFunctions[filter];
 
   if (!fetchTasks) {
@@ -40,7 +44,7 @@ export default async function TasksPage({
   if (tasks.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center flex-1 space-y-4">
-        <p className="text-center  text-base sm:text-lg font-bold">
+        <p className="text-center text-base sm:text-lg font-bold">
           {emptyMessages[filter] || "Nenhuma tarefa encontrada"}
         </p>
         {filter === "all" && (
