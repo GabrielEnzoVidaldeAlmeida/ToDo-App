@@ -16,7 +16,8 @@ import { eq } from "drizzle-orm";
 //   "tasks.json"
 // );
 
-const SIMULATE_WAIT_IN_MS = 1000;
+// const SIMULATE_WAIT_IN_MS = 1000;
+const simulateWaitMs = Number(process.env.SIMULATE_WAIT_IN_MS) || 0;
 
 function mapPriority(priority: string): Priority {
   switch (priority) {
@@ -33,7 +34,7 @@ function mapPriority(priority: string): Priority {
 
 export class DrizzleTaskRepository implements TaskRepository {
   async findAll(): Promise<TaskModel[]> {
-    await asyncDelay(SIMULATE_WAIT_IN_MS);
+    await asyncDelay(simulateWaitMs);
     logColor("findAll", Date.now());
 
     const tasks = await drizzleDb.query.tasks.findMany({
@@ -48,7 +49,7 @@ export class DrizzleTaskRepository implements TaskRepository {
   }
 
   async findDone(): Promise<TaskModel[]> {
-    await asyncDelay(SIMULATE_WAIT_IN_MS, true);
+    await asyncDelay(simulateWaitMs, true);
     logColor("findDone", Date.now());
 
     const tasksFromDb = await drizzleDb.query.tasks.findMany({
@@ -64,7 +65,7 @@ export class DrizzleTaskRepository implements TaskRepository {
   }
 
   async findPending(): Promise<TaskModel[]> {
-    await asyncDelay(SIMULATE_WAIT_IN_MS, true);
+    await asyncDelay(simulateWaitMs, true);
     logColor("findPending", Date.now());
 
     const tasksFromDb = await drizzleDb.query.tasks.findMany({
@@ -90,7 +91,7 @@ export class DrizzleTaskRepository implements TaskRepository {
   // }
 
   async findById(id: string): Promise<TaskModel> {
-    await asyncDelay(SIMULATE_WAIT_IN_MS, true);
+    await asyncDelay(simulateWaitMs, true);
 
     logColor("findById", Date.now());
 

@@ -26,10 +26,6 @@ export const findTasksPending = cache(
   )
 );
 
-// export const findTasksPending = cache(
-//   async () => await taskRepository.findPending()
-// );
-
 export const findTasksDone = cache(
   unstable_cache(
     async () => {
@@ -41,8 +37,6 @@ export const findTasksDone = cache(
     }
   )
 );
-
-// export const findTasksDone = cache(async () => await taskRepository.findDone());
 
 export const findByIdTask = cache((id: string) =>
   unstable_cache(() => taskRepository.findById(id), [`task-${id}`], {
