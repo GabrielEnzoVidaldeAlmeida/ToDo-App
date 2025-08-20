@@ -14,7 +14,7 @@ export function SearchCreated() {
 
     if (created === "1") {
       toast.dismiss();
-      toast.success("Post criado com sucesso");
+      toast.success("Tarefa criado com sucesso");
       const url = new URL(window.location.href);
       url.searchParams.delete("created");
       router.replace(url.toString());
