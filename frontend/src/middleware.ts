@@ -1,0 +1,19 @@
+import { NextRequest, NextResponse } from "next/server";
+
+export async function middleware(request: NextRequest) {
+  const token = request.cookies.get("loginSession")?.value;
+
+  const isAuth = !!token;
+  const isLoginPage = request.nextUrl.pathname.startsWith("/login");
+
+  if (!isAuth && !isLoginPage) {
+    const loginUrl = new URL("/login", request.url);
+    return NextResponse.redirect(loginUrl);
+  }
+
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: ["/((?!login|_next/static|_next/image|favicon.ico).*)"],
+};
