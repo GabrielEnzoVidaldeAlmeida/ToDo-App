@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function middleware(request: NextRequest) {
-  const token = request.cookies.get("loginSession")?.value;
+  const token = request.cookies.get(
+    process.env.COOKIE_NAME || "loginSession"
+  )?.value;
 
   const isAuth = !!token;
   const isLoginPage = request.nextUrl.pathname.startsWith("/login");
