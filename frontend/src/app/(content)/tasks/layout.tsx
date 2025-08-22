@@ -1,10 +1,11 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, useTransition } from "react";
 import { FilterTasks } from "@/components/FilterTasks";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { LogOutIcon, PlusIcon } from "lucide-react";
+import { HourglassIcon, LogOutIcon, PlusIcon } from "lucide-react";
+import { logoutAction } from "@/actions/login/logout-action";
 
 type TasksLayoutProps = {
   children: ReactNode;
@@ -12,8 +13,8 @@ type TasksLayoutProps = {
 
 export default function TasksLayout({ children }: TasksLayoutProps) {
   const pathname = usePathname();
-
   const activeFilter = pathname?.split("/")[2] || "all";
+  const [isPending, startTransition] = useTransition();
 
   const filters = [
     { label: "Todas", path: "all" },
@@ -24,10 +25,9 @@ export default function TasksLayout({ children }: TasksLayoutProps) {
   function handleLogout(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
     e.preventDefault();
 
-    //TODO: Descomentar após criação do logouAction()
-    // startTransition(async () => {
-    //   await logoutAction();
-    // });
+    startTransition(async () => {
+      await logoutAction();
+    });
   }
 
   return (
@@ -58,8 +58,18 @@ export default function TasksLayout({ children }: TasksLayoutProps) {
             href="#"
             className="flex items-center gap-2 mb-2 sm:my-4 border-1 px-3 py-1 rounded bg-red-500 hover:brightness-90 transition"
           >
-            <LogOutIcon className="w-4 h-4" />
-            Sair
+            {isPending && (
+              <>
+                <HourglassIcon className="w-4 h-4" />
+                Aguarde...
+              </>
+            )}
+            {!isPending && (
+              <>
+                <LogOutIcon className="w-4 h-4" />
+                Sair
+              </>
+            )}
           </a>
         </div>
       </div>
