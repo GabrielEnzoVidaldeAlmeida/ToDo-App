@@ -1,17 +1,18 @@
 "use server";
 
-import { drizzleDb } from "@/db/drizzle";
-import { tasksTable } from "@/db/drizzle/schemas";
-import { eq } from "drizzle-orm";
+import { getCurrentUser } from "@/libs/login/manage-login";
+import { taskRepository } from "@/repositories/task";
 import { revalidateTag } from "next/cache";
 
 export async function toogleTaskStatus(id: string, currentDone: boolean) {
-  //TODO: Verificar usuário logado
+  const user = await getCurrentUser();
 
-  await drizzleDb
-    .update(tasksTable)
-    .set({ done: !currentDone })
-    .where(eq(tasksTable.id, id));
+  if (!user) {
+    return {
+      error: "Você precisa estar logado para alternar o status da tarefa",
+    };
+  }
 
+  await taskRepository.toogleStatus(id, user.id, currentDone);
   revalidateTag("tasks");
 }

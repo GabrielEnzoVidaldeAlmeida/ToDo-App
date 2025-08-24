@@ -7,4 +7,5 @@ export type TaskModel = {
   createdAt: string;
   priority: Priority;
   done: boolean;
+  userId: string;
 };

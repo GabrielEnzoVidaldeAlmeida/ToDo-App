@@ -1,9 +1,9 @@
-"use client";
-
+import { getCurrentUser } from "@/libs/login/manage-login";
 import Link from "next/link";
-
-export function Nav() {
+//TODO: Criar um context e para de usar a nave como async
+export async function Nav() {
   //TODO:Utilizar CLSX
+  const user = await getCurrentUser();
 
   return (
     <nav className="flex justify-between items-center bg-black text-white p-4">
@@ -17,9 +17,11 @@ export function Nav() {
       </h1>
 
       <div className="relative flex items-center">
-        <h1 className="text-lg sm:text-2xl md:text-2xl lg:text-3xl font-extrabold bg-white text-black px-2 rounded">
-          Mesa da Vovó
-        </h1>
+        {user && (
+          <h1 className="text-lg sm:text-2xl md:text-2xl lg:text-3xl font-extrabold bg-white text-black px-2 rounded">
+            {user.username}
+          </h1>
+        )}
       </div>
     </nav>
   );

@@ -1,6 +1,7 @@
 "use server";
 
 import { createLoginSession, verifyPassword } from "@/libs/login/manage-login";
+import { findUserByUsername } from "@/repositories/user/user-repository";
 import { asyncDelay } from "@/utils/async-delay";
 import { redirect } from "next/navigation";
 
@@ -13,7 +14,7 @@ export async function loginAction(
   state: LoginActionState | undefined,
   formData: FormData
 ) {
-  await asyncDelay(5000); //TODO: Decidir se mantenho ou não
+  await asyncDelay(1000); //TODO: Decidir se mantenho ou não
 
   if (!(formData instanceof FormData)) {
     return {
@@ -32,19 +33,22 @@ export async function loginAction(
     };
   }
 
-  const isUsernameValid = username === process.env.LOGIN_USER;
-  const isPasswordValid = await verifyPassword(
-    password,
-    process.env.LOGIN_PASS || ""
-  );
+  // const isUsernameValid = username === process.env.LOGIN_USER;
+  // const isPasswordValid = await verifyPassword(
+  //   password,
+  //   process.env.LOGIN_PASS || ""
+  // );
 
-  if (!isUsernameValid || !isPasswordValid) {
-    return {
-      username,
-      error: "Usuário ou senha inválidos",
-    };
+  const user = await findUserByUsername(username);
+  if (!user) {
+    return { username, error: "Usuário ou senha inválidos" };
   }
 
-  await createLoginSession(username);
+  const isPasswordValid = await verifyPassword(password, user.passwordHash);
+  if (!isPasswordValid) {
+    return { username, error: "Usuário ou senha inválidos" };
+  }
+
+  await createLoginSession({ id: user.id, username: user.name });
   redirect("/tasks/all");
 }

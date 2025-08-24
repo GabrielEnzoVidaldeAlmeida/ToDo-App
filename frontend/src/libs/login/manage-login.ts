@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
-import { SignJWT } from "jose";
+import { jwtVerify, SignJWT } from "jose";
 
 const jwtSecretKey = process.env.JWT_SECRET_KEY;
 const jwtEncodedKey = new TextEncoder().encode(jwtSecretKey);
@@ -16,6 +16,7 @@ export async function hashPassword(password: string) {
 }
 
 type JwtPayload = {
+  userId: string;
   username: string;
   expiresAt: Date;
 };
@@ -25,9 +26,16 @@ export async function verifyPassword(password: string, base64Hash: string) {
   return bcrypt.compare(password, hash);
 }
 
-export async function createLoginSession(username: string) {
+export async function createLoginSession(user: {
+  id: string;
+  username: string;
+}) {
   const expiresAt = new Date(Date.now() + loginExpSeconds * 1000);
-  const loginSession = await signJwt({ username, expiresAt });
+  const loginSession = await signJwt({
+    userId: user.id,
+    username: user.username,
+    expiresAt,
+  });
   const cookieStore = await cookies();
 
   cookieStore.set(loginCookieName, loginSession, {
@@ -53,4 +61,22 @@ export async function signJwt(jwtPayload: JwtPayload) {
     .setIssuedAt()
     .setExpirationTime(loginExpStr)
     .sign(jwtEncodedKey);
+}
+
+export async function getCurrentUser() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get(loginCookieName)?.value;
+
+  if (!token) return null;
+
+  try {
+    const { payload } = await jwtVerify(token, jwtEncodedKey);
+    return {
+      id: payload.userId as string,
+      username: payload.username as string,
+    };
+  } catch {
+    console.log("JWT inválido");
+    return null;
+  }
 }

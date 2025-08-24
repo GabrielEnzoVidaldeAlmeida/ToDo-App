@@ -5,7 +5,7 @@ import { logColor } from "@/utils/log-color";
 import { drizzleDb } from "@/db/drizzle";
 import { asyncDelay } from "@/utils/async-delay";
 import { tasksTable } from "@/db/drizzle/schemas";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 // const ROOT_DIR = process.cwd();
 // const JSON_POSTS_FILE_PATH = resolve(
@@ -33,11 +33,12 @@ function mapPriority(priority: string): Priority {
 }
 
 export class DrizzleTaskRepository implements TaskRepository {
-  async findAll(): Promise<TaskModel[]> {
+  async findAll(userId: string): Promise<TaskModel[]> {
     await asyncDelay(simulateWaitMs);
     logColor("findAll", Date.now());
 
     const tasks = await drizzleDb.query.tasks.findMany({
+      where: (tasks, { eq }) => eq(tasks.userId, userId),
       orderBy: (tasks, { desc }) => desc(tasks.createdAt),
     });
 
@@ -48,12 +49,13 @@ export class DrizzleTaskRepository implements TaskRepository {
     }));
   }
 
-  async findDone(): Promise<TaskModel[]> {
+  async findDone(userId: string): Promise<TaskModel[]> {
     await asyncDelay(simulateWaitMs, true);
     logColor("findDone", Date.now());
 
     const tasksFromDb = await drizzleDb.query.tasks.findMany({
-      where: (tasks, { eq }) => eq(tasks.done, true),
+      where: (tasks, { eq, and }) =>
+        and(eq(tasks.done, true), eq(tasks.userId, userId)),
     });
     const tasks: TaskModel[] = tasksFromDb.map((task) => ({
       ...task,
@@ -64,12 +66,13 @@ export class DrizzleTaskRepository implements TaskRepository {
     return tasks;
   }
 
-  async findPending(): Promise<TaskModel[]> {
+  async findPending(userId: string): Promise<TaskModel[]> {
     await asyncDelay(simulateWaitMs, true);
     logColor("findPending", Date.now());
 
     const tasksFromDb = await drizzleDb.query.tasks.findMany({
-      where: (tasks, { eq }) => eq(tasks.done, false),
+      where: (tasks, { eq, and }) =>
+        and(eq(tasks.done, false), eq(tasks.userId, userId)),
     });
     const tasks: TaskModel[] = tasksFromDb.map((task) => ({
       ...task,
@@ -90,13 +93,14 @@ export class DrizzleTaskRepository implements TaskRepository {
   //   return task;
   // }
 
-  async findById(id: string): Promise<TaskModel> {
+  async findById(id: string, userId: string): Promise<TaskModel> {
     await asyncDelay(simulateWaitMs, true);
 
     logColor("findById", Date.now());
 
     const task = await drizzleDb.query.tasks.findFirst({
-      where: (tasks, { eq }) => eq(tasks.id, id),
+      where: (tasks, { eq, and }) =>
+        and(eq(tasks.id, id), eq(tasks.userId, userId)),
     });
 
     if (!task) throw new Error("Tarefa não encontrada para ID");
@@ -104,7 +108,7 @@ export class DrizzleTaskRepository implements TaskRepository {
     return { ...task, priority: task.priority as Priority };
   }
 
-  async create(task: TaskModel): Promise<TaskModel> {
+  async create(task: TaskModel, userId: string): Promise<TaskModel> {
     const taskExists = await drizzleDb.query.tasks.findFirst({
       where: (tasks, { eq }) => eq(tasks.id, task.id),
       columns: { id: true },
@@ -114,13 +118,19 @@ export class DrizzleTaskRepository implements TaskRepository {
       throw new Error("Tarefa com ID já existe na base de dados");
     }
 
-    await drizzleDb.insert(tasksTable).values(task);
+    const taskWithUser = {
+      ...task,
+      userId,
+    };
+
+    await drizzleDb.insert(tasksTable).values(taskWithUser);
     return task;
   }
 
-  async delete(id: string): Promise<TaskModel> {
+  async delete(id: string, userId: string): Promise<TaskModel> {
     const task = await drizzleDb.query.tasks.findFirst({
-      where: (tasks, { eq }) => eq(tasks.id, id),
+      where: (tasks, { eq, and }) =>
+        and(eq(tasks.id, id), eq(tasks.userId, userId)),
     });
 
     if (!task) {
@@ -132,17 +142,21 @@ export class DrizzleTaskRepository implements TaskRepository {
       priority: task.priority as Priority,
     };
 
-    await drizzleDb.delete(tasksTable).where(eq(tasksTable.id, id));
+    await drizzleDb
+      .delete(tasksTable)
+      .where(and(eq(tasksTable.id, id), eq(tasksTable.userId, userId)));
 
     return taskValidPriority;
   }
 
   async update(
     id: string,
-    newTaskData: Omit<TaskModel, "id" | "createdAt" | "done">
+    newTaskData: Omit<TaskModel, "id" | "createdAt" | "done">,
+    userId: string
   ): Promise<TaskModel> {
     const oldTask = await drizzleDb.query.tasks.findFirst({
-      where: (tasks, { eq }) => eq(tasks.id, id),
+      where: (tasks, { eq, and }) =>
+        and(eq(tasks.id, id), eq(tasks.userId, userId)),
     });
 
     if (!oldTask) {
@@ -157,12 +171,23 @@ export class DrizzleTaskRepository implements TaskRepository {
     await drizzleDb
       .update(tasksTable)
       .set(taskData)
-      .where(eq(tasksTable.id, id));
+      .where(and(eq(tasksTable.id, id), eq(tasksTable.userId, userId)));
 
     return {
       ...oldTask,
       ...taskData,
     };
+  }
+
+  async toogleStatus(
+    id: string,
+    userId: string,
+    currentDone: boolean
+  ): Promise<void> {
+    await drizzleDb
+      .update(tasksTable)
+      .set({ done: !currentDone })
+      .where(and(eq(tasksTable.id, id), eq(tasksTable.userId, userId)));
   }
 }
 

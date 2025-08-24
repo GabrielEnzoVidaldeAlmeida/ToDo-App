@@ -1,20 +1,33 @@
 "use client";
 
-import { loginAction } from "@/actions/login/login-action";
 import { useActionState, useEffect } from "react";
 import { toast } from "react-toastify";
+
+import { LogInIcon } from "lucide-react";
+
 import { InputText } from "../InputText";
 import { Button } from "../Button";
-import { LogInIcon } from "lucide-react";
+import { registerAction } from "@/actions/login/register-action";
 import Link from "next/link";
 
-export function LoginForm() {
-  const initialState = {
+type RegisterFormState = {
+  username: string;
+  password: string;
+  confirmPassword: string;
+  error?: string;
+};
+
+export function RegisterForm() {
+  const initialState: RegisterFormState = {
     username: "",
-    error: "",
+    password: "",
+    confirmPassword: "",
   };
 
-  const [state, action, isPending] = useActionState(loginAction, initialState);
+  const [state, action, isPending] = useActionState(
+    registerAction,
+    initialState
+  );
 
   useEffect(() => {
     if (state?.error) {
@@ -39,23 +52,31 @@ export function LoginForm() {
           type="password"
           name="password"
           labelText="Senha"
-          placeholder="Sua senha"
+          placeholder="Sua senha..."
           disabled={isPending}
         />
 
-        <Button disabled={isPending} type="submit" className="mt-6">
-          <LogInIcon />
-          Entrar
+        <InputText
+          type="password"
+          name="confirmPassword"
+          labelText="Confirmar senha"
+          placeholder="Repita sua senha..."
+          disabled={isPending}
+        />
+
+        <Button type="submit" disabled={isPending} className="mt-6">
+          <LogInIcon /> Registrar
         </Button>
 
         {!!state?.error && <p className="text-red-600">{state.error}</p>}
       </form>
+
       <div className="mt-4">
         <Link
-          href="/register"
+          href="/login"
           className="underline hover:decoration-black hover:text-blue-600"
         >
-          Ainda não tem uma conta? Crie uma
+          Já tem uma conta? Entre
         </Link>
       </div>
     </div>

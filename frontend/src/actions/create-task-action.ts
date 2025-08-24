@@ -1,6 +1,7 @@
 "use server";
 
 import { CreateTask, makePartialTask } from "@/dto/task/dto";
+import { getCurrentUser } from "@/libs/login/manage-login";
 import { TaskCreateSchema } from "@/libs/task/validation";
 import { TaskModel } from "@/models/task/task-model";
 import { taskRepository } from "@/repositories/task";
@@ -21,6 +22,14 @@ export async function createTaskAction(
   formData: FormData
 ): Promise<CreateTaskActionState> {
   //TODO: Verificar se o usuário está logado
+  const currentUser = await getCurrentUser();
+
+  if (!currentUser) {
+    return {
+      formState: prevState.formState,
+      errors: ["Você precisa estar logado para criar uma tarefa"],
+    };
+  }
 
   if (!(formData instanceof FormData)) {
     return {
@@ -48,10 +57,11 @@ export async function createTaskAction(
     createdAt: new Date().toISOString(),
     done: false,
     id: uuidV4(),
+    userId: currentUser.id,
   };
 
   try {
-    await taskRepository.create(newTask);
+    await taskRepository.create(newTask, currentUser.id);
   } catch (e: unknown) {
     if (e instanceof Error) {
       return {
