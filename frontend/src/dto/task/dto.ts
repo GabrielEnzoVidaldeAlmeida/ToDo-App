@@ -10,6 +10,7 @@ export const makePartialTask = (task?: Partial<TaskModel>): TaskModel => {
     createdAt: task?.createdAt ?? "",
     priority: task?.priority ?? "Normal",
     done: false,
+    userId: task?.userId ?? "",
   };
 };
 
