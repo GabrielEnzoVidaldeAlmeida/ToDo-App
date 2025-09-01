@@ -1,4 +1,11 @@
 @baseUrl = http://localhost:3001
 
-### Teste
-GET {{baseUrl}}
+### Create user
+# @name createUser
+POST {{baseUrl}}/user
+Content-Type: application/json
+
+{
+  "name": "enzo",
+  "password": "123456"
+}
