@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
@@ -14,6 +14,16 @@ export class UserService {
   ) {}
 
   async create(dto: CreateUserDto) {
+    const exists = await this.userRepository.exists({
+      where: {
+        name: dto.name,
+      },
+    });
+
+    if (exists) {
+      throw new ConflictException('Usuário já registrado');
+    }
+
     const hashedPassword = await this.hashingService.hash(dto.password);
 
     const newUser: CreateUserDto = {
