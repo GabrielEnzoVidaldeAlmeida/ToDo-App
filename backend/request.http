@@ -1,5 +1,15 @@
 @baseUrl = http://localhost:3001
 
+### Auth login
+# @name authLogin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "name": "enzo",
+  "password": "123456"
+}
+
 ### Create user
 # @name createUser
 POST {{baseUrl}}/user

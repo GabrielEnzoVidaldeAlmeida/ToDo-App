@@ -34,4 +34,12 @@ export class UserService {
     const created = await this.userRepository.save(newUser);
     return created;
   }
+
+  findByName(name: string) {
+    return this.userRepository.findOneBy({ name });
+  }
+
+  save(user: User) {
+    return this.userRepository.save(user);
+  }
 }
