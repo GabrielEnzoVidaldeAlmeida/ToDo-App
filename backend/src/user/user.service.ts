@@ -1,9 +1,15 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { HashingService } from 'src/common/hashing/hashing.service';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -13,16 +19,26 @@ export class UserService {
     private readonly hashingService: HashingService,
   ) {}
 
-  async create(dto: CreateUserDto) {
-    const exists = await this.userRepository.exists({
-      where: {
-        name: dto.name,
-      },
-    });
+  async failIfNameExists(name: string, currentUserId?: string) {
+    const exists = await this.userRepository.findOneBy({ name });
 
-    if (exists) {
-      throw new ConflictException('Usuário já registrado');
+    if (exists && exists.id !== currentUserId) {
+      throw new ConflictException('Nome de usuário já existe');
     }
+  }
+
+  async findOneByOrFail(userDate: Partial<User>) {
+    const user = await this.userRepository.findOneBy(userDate);
+
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    return user;
+  }
+
+  async create(dto: CreateUserDto) {
+    await this.failIfNameExists(dto.name);
 
     const hashedPassword = await this.hashingService.hash(dto.password);
 
@@ -41,6 +57,20 @@ export class UserService {
 
   findById(id: string) {
     return this.userRepository.findOneBy({ id });
+  }
+
+  async update(id: string, dto: UpdateUserDto) {
+    if (!dto.name) {
+      throw new BadRequestException('Dados não enviados');
+    }
+
+    const user = await this.findOneByOrFail({ id });
+
+    user.name = dto.name ?? user.name;
+
+    await this.failIfNameExists(dto.name, user.id);
+
+    return this.save(user);
   }
 
   save(user: User) {
