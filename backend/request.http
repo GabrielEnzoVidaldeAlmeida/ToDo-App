@@ -8,7 +8,7 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "name": "enzo3",
+  "name": "enzo",
   "password": "123456"
 }
 
@@ -23,7 +23,7 @@ POST {{baseUrl}}/user
 Content-Type: application/json
 
 {
-  "name": "enzo3",
+  "name": "enzo",
   "password": "123456"
 }
 
@@ -36,5 +36,29 @@ Authorization: Bearer {{jwtToken}}
 
 
 {
-  "name": "enzo4"
+  "name": "enzo"
 }
+
+### Update user password
+# @name updateUserPassword
+PATCH  {{baseUrl}}/user/me/password
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+
+{
+  "currentPassword":"654321",
+  "newPassword": "123456"
+}
+
+### Read one user
+# @name readOneUser
+GET  {{baseUrl}}/user/me
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+### Delete one user
+# @name deleteOneUser
+DELETE {{baseUrl}}/user/me
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
