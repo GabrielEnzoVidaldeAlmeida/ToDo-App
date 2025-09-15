@@ -5,6 +5,7 @@ import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
+import { TaskModule } from './task/task.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { AuthModule } from './auth/auth.module';
       autoLoadEntities: process.env.DB_AUTO_LOAD_ENTITIES === '1',
     }),
     AuthModule,
+    TaskModule,
   ],
   controllers: [AppController],
   providers: [AppService],
