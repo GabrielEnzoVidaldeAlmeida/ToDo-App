@@ -2,14 +2,22 @@
 
 @jwtToken = {{authLogin.response.body.accessToken}}
 
+@taskId = {{createTask.response.body.id}}
+@taskSlug = {{createTask.response.body.slug}}
+
+@userNameForTesting = Enzo
+@userEmailForTesring = enzo@email.com
+@userPasswordForTesing = 123456
+@userNewPasswordForTesting = 123456
+
 ### Auth login
 # @name authLogin
 POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "name": "enzo",
-  "password": "123456"
+  "name": "{{userNameForTesting}}",
+  "password": "{{userPasswordForTesing}}"
 }
 
 ### Read one user
@@ -23,8 +31,8 @@ POST {{baseUrl}}/user
 Content-Type: application/json
 
 {
-  "name": "enzo",
-  "password": "123456"
+  "name": "{{userNameForTesting}}",
+  "password": "{{userPasswordForTesing}}"
 }
 
 
@@ -36,7 +44,7 @@ Authorization: Bearer {{jwtToken}}
 
 
 {
-  "name": "enzo"
+  "name": "{{userNameForTesting}}",
 }
 
 ### Update user password
@@ -47,8 +55,8 @@ Authorization: Bearer {{jwtToken}}
 
 
 {
-  "currentPassword":"654321",
-  "newPassword": "123456"
+  "currentPassword":"{{userPasswordForTesing}}",
+  "newPassword": "{{userNewPasswordForTesting}}"
 }
 
 ### Read one user
@@ -62,3 +70,18 @@ Authorization: Bearer {{jwtToken}}
 DELETE {{baseUrl}}/user/me
 Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
+
+# TASK
+#######################################
+
+### Create task
+# @name createTask
+POST {{baseUrl}}/task/me
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+{
+  "title": "ta",
+  "content":"content1000",
+  "priority":"Eventual"
+}

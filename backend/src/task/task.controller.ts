@@ -6,18 +6,25 @@ import {
   Patch,
   Param,
   Delete,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { TaskResponseDto } from './dto/task-response.dto';
+import type { AuthenticatedRequest } from 'src/auth/types/authenticated-request';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('task')
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
-  @Post()
-  create(@Body() createTaskDto: CreateTaskDto) {
-    return this.taskService.create(createTaskDto);
+  @UseGuards(JwtAuthGuard)
+  @Post('me')
+  async create(@Req() req: AuthenticatedRequest, @Body() dto: CreateTaskDto) {
+    const task = await this.taskService.create(dto, req.user);
+    return new TaskResponseDto(task);
   }
 
   @Get()

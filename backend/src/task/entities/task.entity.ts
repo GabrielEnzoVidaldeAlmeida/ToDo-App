@@ -1,7 +1,9 @@
+import { User } from 'src/user/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -25,9 +27,15 @@ export class Task {
   @Column({ default: false })
   done: boolean;
 
-  @Column({ type: 'enum', enum: Priority, default: Priority.NORMAL })
+  @Column({ type: 'text', default: Priority.NORMAL })
   priority: Priority;
+
+  @Column({ unique: true })
+  slug: string;
 
   @CreateDateColumn()
   createdAt: Date;
+
+  @ManyToOne(() => User)
+  author: User;
 }

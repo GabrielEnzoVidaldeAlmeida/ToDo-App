@@ -13,7 +13,7 @@ import { TaskModule } from './task/task.module';
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'better-sqlite3',
-      database: process.env.DB_DATABASE || './db.sqlite',
+      database: process.env.DB_DATABASE || './db.sqlite3',
       synchronize: process.env.DB_SYNCHRONIZE === '1',
       autoLoadEntities: process.env.DB_AUTO_LOAD_ENTITIES === '1',
     }),
