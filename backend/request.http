@@ -56,7 +56,7 @@ Authorization: Bearer {{jwtToken}}
 
 {
   "currentPassword":"{{userPasswordForTesing}}",
-  "newPassword": "{{userNewPasswordForTesting}}"
+  "newPassword": "{{userNewPasswordForTesting}}1"
 }
 
 ### Read one user
@@ -81,7 +81,7 @@ Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
 
 {
-  "title": "ta",
+  "title": "título",
   "content":"content1000",
   "priority":"Eventual"
 }
