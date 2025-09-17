@@ -90,3 +90,18 @@ Authorization: Bearer {{jwtToken}}
 # @name readAllTasks
 GET {{baseUrl}}/task
 Authorization: Bearer {{jwtToken}}
+
+### Find all tasks done
+# @name findAllTasksDone
+GET {{baseUrl}}/task/me/done
+Authorization:  Bearer {{jwtToken}}
+
+### Find all tasks pending
+# @name findAllTasksPending
+GET {{baseUrl}}/task/me/pending
+Authorization:  Bearer {{jwtToken}}
+
+### ToogleDone
+# @name toogleDone
+PATCH {{baseUrl}}/task/me/{{taskId}}/done
+Authorization: Bearer {{jwtToken}}

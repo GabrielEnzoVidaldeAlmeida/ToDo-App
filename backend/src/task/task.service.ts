@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -49,6 +54,34 @@ export class TaskService {
     });
 
     return tasks;
+  }
+
+  async findAllTaskByStatus(done: boolean, author: User) {
+    const tasks = await this.taskRepository.find({
+      where: {
+        done,
+        author: { id: author.id },
+      },
+      order: {
+        createdAt: 'DESC',
+      },
+      relations: ['author'],
+    });
+
+    return tasks;
+  }
+
+  async toogleDone(id: string, author: User) {
+    const task = await this.taskRepository.findOne({
+      where: { id, author: { id: author.id } },
+    });
+
+    if (!task) {
+      throw new NotFoundException('Tarefa não encontrada');
+    }
+
+    task.done = !task.done;
+    return this.taskRepository.save(task);
   }
 
   findOne(id: number) {

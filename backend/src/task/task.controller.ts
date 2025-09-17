@@ -34,6 +34,32 @@ export class TaskController {
     return tasks.map((task) => new TaskResponseDto(task));
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Patch('me/:id/done')
+  async toogleDone(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    return this.taskService.toogleDone(id, req.user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('me/done')
+  async findAllDone(@Req() req: AuthenticatedRequest) {
+    const tasksDone = await this.taskService.findAllTaskByStatus(
+      true,
+      req.user,
+    );
+    return tasksDone.map((task) => new TaskResponseDto(task));
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('me/pending')
+  async findAllPending(@Req() req: AuthenticatedRequest) {
+    const tasksDone = await this.taskService.findAllTaskByStatus(
+      false,
+      req.user,
+    );
+    return tasksDone.map((task) => new TaskResponseDto(task));
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.taskService.findOne(+id);
