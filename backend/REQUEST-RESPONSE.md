@@ -25,7 +25,7 @@ GET / task / PATCH / PUT / DELETE / HEAD / OPTIONS / CONNECT / TRACE
 /task/me/[id]        GET         task de um usuário      JWT
 /task/me/[id]        PATCH       Atualizar uma task      JWT
 /task/me/[id]        DELETE      Apagar uma task         JWT
-/task/me/[id]/done   PATCH       Alterar valor 'done'    JWT
+/task/me/[id]/done   PATCH       Alterar valor 'done'    JWT ✅
 /task/me/done        GET         Ver tasks 'done'        JWT ✅
 /task/me/pending     GET         Ver tasks 'pending'     JWT ✅
 

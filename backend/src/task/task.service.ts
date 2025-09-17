@@ -84,12 +84,36 @@ export class TaskService {
     return this.taskRepository.save(task);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} task`;
+  async findOneOrFail(taskData: Partial<Task>, author: User) {
+    const task = await this.taskRepository.findOne({
+      where: {
+        ...taskData,
+        author: { id: author.id },
+      },
+      relations: ['author'],
+    });
+
+    if (!task) {
+      throw new NotFoundException('Tarefa não encontrada');
+    }
+
+    return task;
   }
 
-  update(id: number, updateTaskDto: UpdateTaskDto) {
-    return `This action updates a #${id} task`;
+  async update(taskData: Partial<Task>, dto: UpdateTaskDto, author: User) {
+    if (Object.keys(dto).length === 0) {
+      throw new BadRequestException('Dados não enviados');
+    }
+
+    const task = await this.findOneOrFail(taskData, author);
+
+    task.title = dto.title ?? task.title;
+    task.content = dto.content ?? task.content;
+    task.priority = dto.priority ?? task.priority;
+    //TODO: Vericiar como adicionar toogleDone no update:
+    // task.done = dto.content ?? task.done;
+
+    return this.taskRepository.save(task);
   }
 
   remove(id: number) {

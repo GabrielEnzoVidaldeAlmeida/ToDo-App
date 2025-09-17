@@ -8,6 +8,7 @@ import {
   Delete,
   Req,
   UseGuards,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -60,14 +61,16 @@ export class TaskController {
     return tasksDone.map((task) => new TaskResponseDto(task));
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.taskService.findOne(+id);
-  }
+  @UseGuards(JwtAuthGuard)
+  @Patch('me/:id')
+  async update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Req() req: AuthenticatedRequest,
+    @Body() dto: UpdateTaskDto,
+  ) {
+    const task = await this.taskService.update({ id }, dto, req.user);
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
-    return this.taskService.update(+id, updateTaskDto);
+    return new TaskResponseDto(task);
   }
 
   @Delete(':id')

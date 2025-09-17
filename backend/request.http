@@ -105,3 +105,13 @@ Authorization:  Bearer {{jwtToken}}
 # @name toogleDone
 PATCH {{baseUrl}}/task/me/{{taskId}}/done
 Authorization: Bearer {{jwtToken}}
+
+### Update task
+# @name updateTask
+PATCH {{baseUrl}}/task/me/{{taskId}}
+Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
+
+{
+  "title": "Um noooooooooooovo titulo"
+}
