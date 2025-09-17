@@ -37,8 +37,18 @@ export class TaskService {
     return created;
   }
 
-  findAll() {
-    return `This action returns all task`;
+  async findAllTask(author: User) {
+    const tasks = await this.taskRepository.find({
+      where: {
+        author: { id: author.id },
+      },
+      order: {
+        createdAt: 'DESC',
+      },
+      relations: ['author'],
+    });
+
+    return tasks;
   }
 
   findOne(id: number) {

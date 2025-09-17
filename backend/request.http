@@ -85,3 +85,8 @@ Authorization: Bearer {{jwtToken}}
   "content":"content1000",
   "priority":"Eventual"
 }
+
+### Read all tasks
+# @name readAllTasks
+GET {{baseUrl}}/task
+Authorization: Bearer {{jwtToken}}

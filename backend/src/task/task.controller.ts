@@ -27,9 +27,11 @@ export class TaskController {
     return new TaskResponseDto(task);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
-  findAll() {
-    return this.taskService.findAll();
+  async findAllTask(@Req() req: AuthenticatedRequest) {
+    const tasks = await this.taskService.findAllTask(req.user);
+    return tasks.map((task) => new TaskResponseDto(task));
   }
 
   @Get(':id')
