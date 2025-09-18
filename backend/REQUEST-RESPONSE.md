@@ -23,7 +23,7 @@ GET / task / PATCH / PUT / DELETE / HEAD / OPTIONS / CONNECT / TRACE
 /task/me             POST        Criar task              JWT ✅
 /task/me             GET         tasks de um usuário     JWT
 /task/me/[id]        GET         task de um usuário      JWT
-/task/me/[id]        PATCH       Atualizar uma task      JWT
+/task/me/[id]        PATCH       Atualizar uma task      JWT ✅
 /task/me/[id]        DELETE      Apagar uma task         JWT
 /task/me/[id]/done   PATCH       Alterar valor 'done'    JWT ✅
 /task/me/done        GET         Ver tasks 'done'        JWT ✅

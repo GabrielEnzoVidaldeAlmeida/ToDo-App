@@ -81,8 +81,8 @@ Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
 
 {
-  "title": "título",
-  "content":"content1000",
+  "title": "DELETE - título",
+  "content":"DELETE - content1000",
   "priority":"Eventual"
 }
 
@@ -113,5 +113,12 @@ Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
 
 {
-  "title": "Um noooooooooooovo titulo"
+  "title": "Um noooooooooooovo titulo",
+  "content": "t",
+  "priority": "Urgente"
 }
+
+### Delete task
+# @name deleteTask
+DELETE {{baseUrl}}/task/me/{{taskId}}
+Authorization: Bearer {{jwtToken}}

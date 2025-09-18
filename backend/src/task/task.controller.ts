@@ -73,8 +73,13 @@ export class TaskController {
     return new TaskResponseDto(task);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.taskService.remove(+id);
+  @UseGuards(JwtAuthGuard)
+  @Delete('me/:id')
+  async remove(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Req() req: AuthenticatedRequest,
+  ) {
+    const task = await this.taskService.remove({ id }, req.user);
+    return new TaskResponseDto(task);
   }
 }

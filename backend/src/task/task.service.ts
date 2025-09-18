@@ -116,7 +116,13 @@ export class TaskService {
     return this.taskRepository.save(task);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} task`;
+  async remove(taskData: Partial<Task>, author: User) {
+    const task = await this.findOneOrFail(taskData, author);
+    await this.taskRepository.delete({
+      ...taskData,
+      author: { id: author.id },
+    });
+
+    return task;
   }
 }
