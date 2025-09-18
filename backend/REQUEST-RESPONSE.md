@@ -19,12 +19,10 @@ GET / task / PATCH / PUT / DELETE / HEAD / OPTIONS / CONNECT / TRACE
 /user/me/password    PATCH       Atualizar senha         JWT ✅
 
 /task/               GET         Ver todas as tasks      JWT ✅
-/task/[slug]         GET         Ver uma task            JWT
+/task/[slug]         GET         Ver uma task            JWT ✅
 /task/me             POST        Criar task              JWT ✅
-/task/me             GET         tasks de um usuário     JWT
-/task/me/[id]        GET         task de um usuário      JWT
 /task/me/[id]        PATCH       Atualizar uma task      JWT ✅
-/task/me/[id]        DELETE      Apagar uma task         JWT
+/task/me/[id]        DELETE      Apagar uma task         JWT ✅
 /task/me/[id]/done   PATCH       Alterar valor 'done'    JWT ✅
 /task/me/done        GET         Ver tasks 'done'        JWT ✅
 /task/me/pending     GET         Ver tasks 'pending'     JWT ✅

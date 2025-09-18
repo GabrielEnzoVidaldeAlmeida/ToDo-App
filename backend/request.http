@@ -113,9 +113,8 @@ Content-Type: application/json
 Authorization: Bearer {{jwtToken}}
 
 {
-  "title": "Um noooooooooooovo titulo",
-  "content": "t",
-  "priority": "Urgente"
+
+  "done": true
 }
 
 ### Delete task

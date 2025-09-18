@@ -110,8 +110,7 @@ export class TaskService {
     task.title = dto.title ?? task.title;
     task.content = dto.content ?? task.content;
     task.priority = dto.priority ?? task.priority;
-    //TODO: Vericiar como adicionar toogleDone no update:
-    // task.done = dto.content ?? task.done;
+    task.done = dto.done ?? task.done;
 
     return this.taskRepository.save(task);
   }
