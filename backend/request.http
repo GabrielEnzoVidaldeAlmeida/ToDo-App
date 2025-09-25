@@ -5,9 +5,9 @@
 @taskId = {{createTask.response.body.id}}
 @taskSlug = {{createTask.response.body.slug}}
 
-@userNameForTesting = Enzo
+@userNameForTesting = enzo12
 @userEmailForTesring = enzo@email.com
-@userPasswordForTesing = 123456
+@userPasswordForTesing = 123
 @userNewPasswordForTesting = 123456
 
 ### Auth login

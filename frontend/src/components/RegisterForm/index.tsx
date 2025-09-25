@@ -2,37 +2,36 @@
 
 import { useActionState, useEffect } from "react";
 import { toast } from "react-toastify";
-
 import { LogInIcon } from "lucide-react";
-
 import { InputText } from "../InputText";
 import { Button } from "../Button";
-import { registerAction } from "@/actions/login/register-action";
 import Link from "next/link";
+import { createUserAction } from "@/actions/user/create-user-action";
+import { PublicUserSchema } from "@/libs/user/schema";
 
-type RegisterFormState = {
-  username: string;
-  password: string;
-  confirmPassword: string;
-  error?: string;
-};
+// type RegisterFormState = {
+//   name: string;
+//   password: string;
+//   password2: string;
+//   error?: string;
+// };
 
 export function RegisterForm() {
-  const initialState: RegisterFormState = {
-    username: "",
-    password: "",
-    confirmPassword: "",
-  };
+  const [state, action, isPending] = useActionState(createUserAction, {
+    user: PublicUserSchema.parse({}),
+    errors: [],
+    success: false,
+  });
 
-  const [state, action, isPending] = useActionState(
-    registerAction,
-    initialState
-  );
+  // const [state, action, isPending] = useActionState<
+  //   CreateUserActionState,
+  //   FormData
+  // >(createUserAction, initialState);
 
   useEffect(() => {
-    if (state?.error) {
-      toast.dismiss();
-      toast.error(state.error);
+    toast.dismiss();
+    if (state.errors.length > 0) {
+      state.errors.forEach((error) => toast.error(error));
     }
   }, [state]);
 
@@ -41,11 +40,11 @@ export function RegisterForm() {
       <form action={action} className="flex flex-col gap-4">
         <InputText
           type="text"
-          name="username"
+          name="name"
           labelText="Usuário"
           placeholder="Seu usuário..."
           disabled={isPending}
-          defaultValue={state?.username}
+          defaultValue={state?.user.name}
         />
 
         <InputText
@@ -58,7 +57,7 @@ export function RegisterForm() {
 
         <InputText
           type="password"
-          name="confirmPassword"
+          name="password2"
           labelText="Confirmar senha"
           placeholder="Repita sua senha..."
           disabled={isPending}
@@ -68,7 +67,7 @@ export function RegisterForm() {
           <LogInIcon /> Registrar
         </Button>
 
-        {!!state?.error && <p className="text-red-600">{state.error}</p>}
+        {/* {!!state?.errors && <p className="text-red-600">{state.errors}</p>} */}
       </form>
 
       <div className="mt-4">
