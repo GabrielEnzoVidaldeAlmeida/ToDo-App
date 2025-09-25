@@ -29,16 +29,10 @@ export class TaskController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get()
+  @Get('me')
   async findAllTask(@Req() req: AuthenticatedRequest) {
     const tasks = await this.taskService.findAllTask(req.user);
     return tasks.map((task) => new TaskResponseDto(task));
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Patch('me/:id/done')
-  async toogleDone(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
-    return this.taskService.toogleDone(id, req.user);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -59,6 +53,11 @@ export class TaskController {
       req.user,
     );
     return tasksDone.map((task) => new TaskResponseDto(task));
+  }
+  @UseGuards(JwtAuthGuard)
+  @Patch('me/:id/done')
+  async toogleDone(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    return this.taskService.toogleDone(id, req.user);
   }
 
   @UseGuards(JwtAuthGuard)

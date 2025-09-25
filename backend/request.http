@@ -94,7 +94,7 @@ Authorization: Bearer {{jwtToken}}
 
 ### Read all tasks
 # @name readAllTasks
-GET {{baseUrl}}/task
+GET {{baseUrl}}/task/me
 Authorization: Bearer {{jwtToken}}
 
 ### Find all tasks done
