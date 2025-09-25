@@ -1,3 +1,5 @@
+//TODO: Remover após terminar de consumir todos os dados da API REST (NestJS)
+
 "use server";
 
 import { hashPassword } from "@/libs/login/manage-login";

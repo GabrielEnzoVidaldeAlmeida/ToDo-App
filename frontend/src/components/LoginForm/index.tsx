@@ -11,8 +11,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 export function LoginForm() {
   const initialState = {
-    username: "",
-    error: "",
+    name: "",
+    errors: [],
   };
 
   const [state, action, isPending] = useActionState(loginAction, initialState);
@@ -22,9 +22,9 @@ export function LoginForm() {
   const created = searchParams.get("created");
 
   useEffect(() => {
-    if (state?.error) {
+    if (state?.errors) {
       toast.dismiss();
-      toast.error(state.error);
+      toast.error(state.errors);
     }
   }, [state]);
 
@@ -51,11 +51,11 @@ export function LoginForm() {
       <form action={action} className="flex flex-col gap-4">
         <InputText
           type="text"
-          name="username"
+          name="name"
           labelText="Usuário"
           placeholder="Seu usuário..."
           disabled={isPending}
-          defaultValue={state?.username}
+          defaultValue={state?.name}
         />
 
         <InputText

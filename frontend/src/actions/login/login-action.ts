@@ -1,54 +1,67 @@
 "use server";
 
-import { createLoginSession, verifyPassword } from "@/libs/login/manage-login";
-import { findUserByUsername } from "@/repositories/user/user-repository";
+import { createLoginSessionFromApi } from "@/libs/login/manage-login";
+import { LoginSchema } from "@/libs/login/schema";
+import { apiRequest } from "@/utils/api-request";
 import { asyncDelay } from "@/utils/async-delay";
+import { getZodErrorMessages } from "@/utils/get-zod-error-messages";
 import { redirect } from "next/navigation";
 
 type LoginActionState = {
-  username: string;
-  error: string;
+  name: string;
+  errors: string[];
 };
 
-export async function loginAction(
-  state: LoginActionState | undefined,
-  formData: FormData
-) {
-  await asyncDelay(1000); //TODO: Decidir se mantenho ou não
+export async function loginAction(state: LoginActionState, formData: FormData) {
+  const allowLogin = Boolean(Number(process.env.ALLOW_LOGIN));
+
+  if (!allowLogin) {
+    return {
+      name: "",
+      errors: ["Login not allowed"],
+    };
+  }
+
+  await asyncDelay(5000); // pensar se diminuo ou removo
 
   if (!(formData instanceof FormData)) {
     return {
-      username: "",
-      error: "Dados inválidos",
+      name: "",
+      errors: ["Dados inválidos"],
     };
   }
 
-  const username = formData.get("username")?.toString().trim() || "";
-  const password = formData.get("password")?.toString().trim() || "";
+  const formObj = Object.fromEntries(formData.entries());
+  const formUser = formObj?.name?.toString() || "";
+  const parsedFormData = LoginSchema.safeParse(formObj);
 
-  if (!username || !password) {
+  if (!parsedFormData.success) {
     return {
-      username,
-      error: "Digite o usuário e a senha",
+      name: formUser,
+      errors: getZodErrorMessages(parsedFormData.error.format()),
     };
   }
 
-  // const isUsernameValid = username === process.env.LOGIN_USER;
-  // const isPasswordValid = await verifyPassword(
-  //   password,
-  //   process.env.LOGIN_PASS || ""
-  // );
+  const loginResponse = await apiRequest<{ accessToken: string }>(
+    "/auth/login",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(parsedFormData.data),
+    }
+  );
 
-  const user = await findUserByUsername(username);
-  if (!user) {
-    return { username, error: "Usuário ou senha inválidos" };
+  if (!loginResponse.success) {
+    return {
+      name: formUser,
+      errors: loginResponse.errors,
+    };
   }
 
-  const isPasswordValid = await verifyPassword(password, user.passwordHash);
-  if (!isPasswordValid) {
-    return { username, error: "Usuário ou senha inválidos" };
-  }
-
-  await createLoginSession({ id: user.id, username: user.name });
+  // await createLoginSession({ id: user.id, username: user.name });
+  //TODO: Criar essa função na manage-login.ts
+  await createLoginSessionFromApi(loginResponse.data.accessToken);
   redirect("/tasks/all");
 }

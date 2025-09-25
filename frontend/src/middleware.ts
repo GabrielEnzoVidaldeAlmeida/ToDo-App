@@ -1,14 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function middleware(request: NextRequest) {
-  const token = request.cookies.get(
+  const jwtSession = request.cookies.get(
     process.env.COOKIE_NAME || "loginSession"
   )?.value;
+  const isAuthenticated = !!jwtSession;
 
-  const isAuth = !!token;
-  const isLoginPage = request.nextUrl.pathname.startsWith("/login");
+  // const isAuth = !!token;
+  // const isLoginPage = request.nextUrl.pathname.startsWith("/login");
 
-  if (!isAuth && !isLoginPage) {
+  if (!isAuthenticated) {
     const loginUrl = new URL("/login", request.url);
     return NextResponse.redirect(loginUrl);
   }

@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
 import { jwtVerify, SignJWT } from "jose";
+import { redirect } from "next/navigation";
 
 const jwtSecretKey = process.env.JWT_SECRET_KEY;
 const jwtEncodedKey = new TextEncoder().encode(jwtSecretKey);
@@ -16,8 +17,7 @@ export async function hashPassword(password: string) {
 }
 
 type JwtPayload = {
-  userId: string;
-  username: string;
+  name: string;
   expiresAt: Date;
 };
 
@@ -26,22 +26,35 @@ export async function verifyPassword(password: string, base64Hash: string) {
   return bcrypt.compare(password, hash);
 }
 
-export async function createLoginSession(user: {
-  id: string;
-  username: string;
-}) {
+// export async function createLoginSession(user: {
+//   id: string;
+//   username: string;
+// }) {
+//   const expiresAt = new Date(Date.now() + loginExpSeconds * 1000);
+//   const loginSession = await signJwt({
+//     userId: user.id,
+//     username: user.username,
+//     expiresAt,
+//   });
+//   const cookieStore = await cookies();
+
+//   cookieStore.set(loginCookieName, loginSession, {
+//     httpOnly: true,
+//     secure: true,
+//     sameSite: true,
+//     expires: expiresAt,
+//   });
+// }
+
+export async function createLoginSessionFromApi(jwt: string) {
   const expiresAt = new Date(Date.now() + loginExpSeconds * 1000);
-  const loginSession = await signJwt({
-    userId: user.id,
-    username: user.username,
-    expiresAt,
-  });
+  const loginSession = jwt;
   const cookieStore = await cookies();
 
   cookieStore.set(loginCookieName, loginSession, {
     httpOnly: true,
     secure: true,
-    sameSite: true,
+    sameSite: "strict",
     expires: expiresAt,
   });
 }
@@ -50,6 +63,24 @@ export async function deleteLoginSession() {
   const cookieStore = await cookies();
   cookieStore.set(loginCookieName, "", { expires: new Date(0) });
   cookieStore.delete(loginCookieName);
+}
+
+export async function getLoginSessionForApi() {
+  const cookieStore = await cookies();
+
+  const jwt = cookieStore.get(loginCookieName)?.value;
+
+  if (!jwt) return false;
+
+  return jwt;
+}
+
+export async function requireLoginSessionForApiOrRedirect() {
+  const isAuthenticated = await getLoginSessionForApi();
+
+  if (!isAuthenticated) {
+    redirect("/login");
+  }
 }
 
 export async function signJwt(jwtPayload: JwtPayload) {
