@@ -5,5 +5,5 @@ export const LoginSchema = z.object({
   password: z
     .string()
     .trim()
-    .min(3, "Senha precisa ter um mínimo de 3 caracteres"),
+    .min(6, "Senha precisa ter um mínimo de 6 caracteres"),
 });

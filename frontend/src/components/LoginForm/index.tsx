@@ -71,7 +71,7 @@ export function LoginForm() {
           Entrar
         </Button>
 
-        {/* {!!state?.error && <p className="text-red-600">{state.error}</p>} */}
+        {!!state?.errors && <p className="text-red-600">{state.errors}</p>}
       </form>
       <div className="mt-4">
         <Link

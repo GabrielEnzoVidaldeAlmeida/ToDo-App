@@ -17,13 +17,18 @@ Content-Type: application/json
 Origin: http://localhost:3000
 
 {
-  "name": "{{userNameForTesting}}",
-  "password": "{{userPasswordForTesing}}"
+  "name": "enzo",
+  "password": "123456"
 }
+
+# {
+#   "name": "{{userNameForTesting}}",
+#   "password": "{{userPasswordForTesing}}"
+# }
 
 ### Read one user
 # @name readOneUser
-GET {{baseUrl}}/user/123
+GET {{baseUrl}}/user/123  
 Authorization: Bearer {{jwtToken}}
 
 ### Create user

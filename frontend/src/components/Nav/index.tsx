@@ -1,4 +1,3 @@
-// import { getCurrentUser } from "@/libs/login/manage-login";
 import Link from "next/link";
 //TODO: Criar um context e para de usar a nave como async
 export async function Nav() {
