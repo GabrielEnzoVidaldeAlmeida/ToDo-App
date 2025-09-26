@@ -4,12 +4,13 @@ import { CreateTask, makePartialTask } from "@/dto/task/dto";
 import { getCurrentUser } from "@/libs/login/manage-login";
 import { TaskCreateSchema } from "@/libs/task/validation";
 import { TaskModel } from "@/models/task/task-model";
-import { taskRepository } from "@/repositories/task";
+// import { taskRepository } from "@/repositories/task";
+import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { getZodErrorMessages } from "@/utils/get-zod-error-messages";
 import { logColor } from "@/utils/log-color";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
-import { v4 as uuidV4 } from "uuid";
+// import { v4 as uuidV4 } from "uuid";
 
 type CreateTaskActionState = {
   formState: CreateTask;
@@ -21,7 +22,6 @@ export async function createTaskAction(
   prevState: CreateTaskActionState,
   formData: FormData
 ): Promise<CreateTaskActionState> {
-  //TODO: Verificar se o usuário está logado
   const currentUser = await getCurrentUser();
 
   if (!currentUser) {
@@ -52,27 +52,19 @@ export async function createTaskAction(
   }
 
   const validTaskData = zodParsedObj.data;
-  const newTask: TaskModel = {
-    ...validTaskData,
-    createdAt: new Date().toISOString(),
-    done: false,
-    id: uuidV4(),
-    userId: currentUser.id,
-  };
 
-  try {
-    await taskRepository.create(newTask, currentUser.id);
-  } catch (e: unknown) {
-    if (e instanceof Error) {
-      return {
-        formState: newTask,
-        errors: [e.message],
-      };
-    }
+  const response = await authenticatedApiRequest<TaskModel>("/task/me", {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify(validTaskData),
+  });
 
+  if (!response.success) {
     return {
-      formState: newTask,
-      errors: ["Erro desconhecido"],
+      formState: makePartialTask(validTaskData),
+      errors: response.errors,
     };
   }
 
