@@ -3,7 +3,8 @@
 import { CreateTask, makePartialTask, makeTask } from "@/dto/task/dto";
 import { getCurrentUser } from "@/libs/login/manage-login";
 import { TaskUpdateSchema } from "@/libs/task/validation";
-import { taskRepository } from "@/repositories/task";
+import { TaskModel } from "@/models/task/task-model";
+import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { getZodErrorMessages } from "@/utils/get-zod-error-messages";
 import { revalidateTag } from "next/cache";
 
@@ -17,8 +18,8 @@ export async function updateTaskAction(
   prevState: UpdateTaskActionState,
   formData: FormData
 ): Promise<UpdateTaskActionState> {
-  //TODO: Verificar se usuário está logado
   const currentUser = await getCurrentUser();
+
   if (!currentUser) {
     return {
       formState: prevState.formState,
@@ -59,27 +60,25 @@ export async function updateTaskAction(
     userId: currentUser.id,
   };
 
-  let task;
-  try {
-    task = await taskRepository.update(id, newTask, currentUser.id);
-  } catch (e: unknown) {
-    if (e instanceof Error) {
-      return {
-        formState: makePartialTask(formDataToObj),
-        errors: [e.message],
-      };
-    }
+  const response = await authenticatedApiRequest<TaskModel>(`/task/me/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify(newTask),
+  });
 
+  if (!response.success) {
     return {
-      formState: makePartialTask(formDataToObj),
-      errors: ["Error desconhecido"],
+      formState: makePartialTask(validTaskData),
+      errors: response.errors,
     };
   }
 
   revalidateTag("tasks");
 
   return {
-    formState: makeTask(task),
+    formState: makeTask(response.data),
     errors: [],
     success: true,
   };
