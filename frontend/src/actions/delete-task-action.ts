@@ -1,12 +1,14 @@
 "use server";
 
 import { getCurrentUser } from "@/libs/login/manage-login";
-import { taskRepository } from "@/repositories/task";
+import { TaskModel } from "@/models/task/task-model";
+// import { taskRepository } from "@/repositories/task";
+import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { revalidateTag } from "next/cache";
 
 export async function deleteTaskAction(id: string) {
-  //TODO: Verificar usuário logado
   const currentUser = await getCurrentUser();
+
   if (!currentUser) {
     return {
       error: "Você precisa estar logado para deletar uma tarefa",
@@ -19,16 +21,13 @@ export async function deleteTaskAction(id: string) {
     };
   }
 
-  try {
-    await taskRepository.delete(id, currentUser.id);
-  } catch (e: unknown) {
-    if (e instanceof Error) {
-      return {
-        error: e.message,
-      };
-    }
+  const response = await authenticatedApiRequest<TaskModel>(`/task/me/${id}`, {
+    method: "DELETE",
+  });
+
+  if (!response.success) {
     return {
-      error: "Erro desconhecido",
+      errors: response.errors,
     };
   }
 
