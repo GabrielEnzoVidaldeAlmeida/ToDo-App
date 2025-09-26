@@ -78,6 +78,8 @@ export class TaskService {
       relations: ['author'],
     });
 
+    console.log('>>> filtro:', done, 'total:', tasks.length, tasks);
+
     return tasks;
   }
 

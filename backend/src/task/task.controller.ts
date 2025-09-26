@@ -36,15 +36,6 @@ export class TaskController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('me/:id')
-  async findTaskById(
-    @Req() req: AuthenticatedRequest,
-    @Param('id') id: string,
-  ) {
-    return await this.taskService.findTaskById(id, req.user);
-  }
-
-  @UseGuards(JwtAuthGuard)
   @Get('me/done')
   async findAllDone(@Req() req: AuthenticatedRequest) {
     const tasksDone = await this.taskService.findAllTaskByStatus(
@@ -63,6 +54,16 @@ export class TaskController {
     );
     return tasksDone.map((task) => new TaskResponseDto(task));
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('me/:id')
+  async findTaskById(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+  ) {
+    return await this.taskService.findTaskById(id, req.user);
+  }
+
   @UseGuards(JwtAuthGuard)
   @Patch('me/:id/done')
   async toogleDone(@Req() req: AuthenticatedRequest, @Param('id') id: string) {

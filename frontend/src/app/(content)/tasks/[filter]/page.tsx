@@ -41,7 +41,7 @@ export default async function TasksPage({
 
   const tasks = await fetchTasks();
 
-  if (tasks.length === 0) {
+  if (!tasks || tasks.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center flex-1 space-y-4">
         <p className="text-center text-base sm:text-lg font-bold">

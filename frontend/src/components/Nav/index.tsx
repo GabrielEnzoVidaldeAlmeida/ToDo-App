@@ -1,4 +1,3 @@
-import NavMenu from "@/app/NavMenu";
 import { getCurrentUser } from "@/libs/login/manage-login";
 import Link from "next/link";
 export async function Nav() {
@@ -19,8 +18,10 @@ export async function Nav() {
 
       <div className="relative flex items-center">
         {user && (
-          <h1 className="text-lg sm:text-2xl md:text-2xl lg:text-3xl font-extrabold bg-white text-black px-2 rounded">
-            <NavMenu user={user} />
+          <h1 className="text-lg sm:text-2xl md:text-2xl lg:text-3xl font-extrabold bg-white text-black px-2 rounded hover:brightness-90 transition">
+            <Link href="#" className="hover:cursor-pointer">
+              {user.name}
+            </Link>
           </h1>
         )}
       </div>
