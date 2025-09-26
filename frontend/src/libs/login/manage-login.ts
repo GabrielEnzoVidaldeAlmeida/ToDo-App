@@ -1,7 +1,9 @@
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
-import { jwtVerify, SignJWT } from "jose";
+import { SignJWT } from "jose";
 import { redirect } from "next/navigation";
+import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
+import { PublicUserDto } from "../user/schema";
 
 const jwtSecretKey = process.env.JWT_SECRET_KEY;
 const jwtEncodedKey = new TextEncoder().encode(jwtSecretKey);
@@ -25,26 +27,6 @@ export async function verifyPassword(password: string, base64Hash: string) {
   const hash = Buffer.from(base64Hash, "base64").toString("utf-8");
   return bcrypt.compare(password, hash);
 }
-
-// export async function createLoginSession(user: {
-//   id: string;
-//   username: string;
-// }) {
-//   const expiresAt = new Date(Date.now() + loginExpSeconds * 1000);
-//   const loginSession = await signJwt({
-//     userId: user.id,
-//     username: user.username,
-//     expiresAt,
-//   });
-//   const cookieStore = await cookies();
-
-//   cookieStore.set(loginCookieName, loginSession, {
-//     httpOnly: true,
-//     secure: true,
-//     sameSite: true,
-//     expires: expiresAt,
-//   });
-// }
 
 export async function createLoginSessionFromApi(jwt: string) {
   const expiresAt = new Date(Date.now() + loginExpSeconds * 1000);
@@ -94,20 +76,12 @@ export async function signJwt(jwtPayload: JwtPayload) {
     .sign(jwtEncodedKey);
 }
 
-export async function getCurrentUser() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(loginCookieName)?.value;
+export async function getCurrentUser(): Promise<PublicUserDto | null> {
+  const res = await authenticatedApiRequest<PublicUserDto>("/user/me", {
+    method: "GET",
+    cache: "no-store",
+  });
 
-  if (!token) return null;
-
-  try {
-    const { payload } = await jwtVerify(token, jwtEncodedKey);
-    return {
-      id: payload.userId as string,
-      username: payload.username as string,
-    };
-  } catch {
-    console.log("JWT inválido");
-    return null;
-  }
+  if (!res.success) return null;
+  return res.data;
 }
