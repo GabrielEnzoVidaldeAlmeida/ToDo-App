@@ -55,17 +55,13 @@ export async function updateTaskAction(
   }
 
   const validTaskData = zodParsedObj.data;
-  const newTask = {
-    ...validTaskData,
-    userId: currentUser.id,
-  };
 
   const response = await authenticatedApiRequest<TaskModel>(`/task/me/${id}`, {
     method: "PATCH",
     headers: {
       "Content-type": "application/json",
     },
-    body: JSON.stringify(newTask),
+    body: JSON.stringify(validTaskData),
   });
 
   if (!response.success) {

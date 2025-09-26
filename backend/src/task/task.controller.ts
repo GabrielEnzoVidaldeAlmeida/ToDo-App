@@ -36,7 +36,7 @@ export class TaskController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('me/task/:id')
+  @Get('me/:id')
   async findTaskById(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,

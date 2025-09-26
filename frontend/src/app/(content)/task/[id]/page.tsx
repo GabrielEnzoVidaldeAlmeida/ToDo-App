@@ -1,14 +1,14 @@
 import ManageTaskForm from "@/components/ManageTaskForm";
-import { findByIdTask } from "@/libs/task/queries";
+import { findTaskById } from "@/libs/task/queries";
 import { notFound } from "next/navigation";
 
 type UpdateTaskPageProps = {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 };
 
 export default async function UpdateTaskPage({ params }: UpdateTaskPageProps) {
   const { id } = await params;
-  const task = await findByIdTask(id).catch();
+  const task = await findTaskById(id);
 
   if (!task) notFound();
 
