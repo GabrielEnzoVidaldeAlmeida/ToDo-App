@@ -1,10 +1,11 @@
 "use server";
 
 import { getCurrentUser } from "@/libs/login/manage-login";
-import { taskRepository } from "@/repositories/task";
+import { TaskModel } from "@/models/task/task-model";
+import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { revalidateTag } from "next/cache";
 
-export async function toogleTaskStatus(id: string, currentDone: boolean) {
+export async function toogleTaskStatus(id: string) {
   const user = await getCurrentUser();
 
   if (!user) {
@@ -13,6 +14,18 @@ export async function toogleTaskStatus(id: string, currentDone: boolean) {
     };
   }
 
-  await taskRepository.toogleStatus(id, user.id, currentDone);
+  const response = await authenticatedApiRequest<TaskModel>(
+    `/task/me/${id}/done`,
+    {
+      method: "PATCH",
+    }
+  );
+
+  if (!response.success) {
+    return {
+      errors: response.errors,
+    };
+  }
+
   revalidateTag("tasks");
 }
