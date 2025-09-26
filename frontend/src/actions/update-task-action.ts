@@ -1,12 +1,13 @@
 "use server";
 
-import { CreateTask, makePartialTask, makeTask } from "@/dto/task/dto";
+import { CreateTask, makePartialTask } from "@/dto/task/dto";
 import { getCurrentUser } from "@/libs/login/manage-login";
 import { TaskUpdateSchema } from "@/libs/task/validation";
 import { TaskModel } from "@/models/task/task-model";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { getZodErrorMessages } from "@/utils/get-zod-error-messages";
 import { revalidateTag } from "next/cache";
+import { redirect } from "next/navigation";
 
 type UpdateTaskActionState = {
   formState: CreateTask;
@@ -73,9 +74,5 @@ export async function updateTaskAction(
 
   revalidateTag("tasks");
 
-  return {
-    formState: makeTask(response.data),
-    errors: [],
-    success: true,
-  };
+  redirect("/tasks/all");
 }

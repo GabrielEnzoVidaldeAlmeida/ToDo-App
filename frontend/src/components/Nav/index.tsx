@@ -1,9 +1,8 @@
+import NavMenu from "@/app/NavMenu";
 import { getCurrentUser } from "@/libs/login/manage-login";
 import Link from "next/link";
-//TODO: Criar um context e para de usar a nave como async
 export async function Nav() {
   //TODO:Utilizar CLSX
-  // const user = await getCurrentUser();
 
   const user = await getCurrentUser();
 
@@ -21,7 +20,7 @@ export async function Nav() {
       <div className="relative flex items-center">
         {user && (
           <h1 className="text-lg sm:text-2xl md:text-2xl lg:text-3xl font-extrabold bg-white text-black px-2 rounded">
-            {user.name}
+            <NavMenu user={user} />
           </h1>
         )}
       </div>
