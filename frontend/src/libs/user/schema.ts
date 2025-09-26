@@ -65,6 +65,8 @@ export const UpdateUserSchema = CreateUserBase.omit({
   password2: true,
 }).extend({});
 
+// export const UpdateUserSchema = CreateUserBase.extend({});
+
 export type CreateUserDto = z.infer<typeof CreateUserSchema>;
 export type UpdateUserDto = z.infer<typeof UpdateUserSchema>;
 export type PublicUserDto = z.infer<typeof PublicUserSchema>;

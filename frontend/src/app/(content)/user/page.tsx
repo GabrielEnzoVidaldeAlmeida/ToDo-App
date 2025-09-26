@@ -1,0 +1,20 @@
+// import { InputText } from "@/components/InputText";
+import { getCurrentUser } from "@/libs/login/manage-login";
+
+import UserProfileForm from "@/components/UserProfileForm";
+
+export default async function userPage() {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return <p>Usuário não autenticado</p>;
+  }
+
+  return (
+    //TODO: Estilizar a página
+    <div>
+      <h1>Página de usuário</h1>
+      <UserProfileForm user={user} />
+    </div>
+  );
+}

@@ -9,7 +9,7 @@ import { useActionState, useEffect, useState } from "react";
 import { Priority } from "@/models/task/task-model";
 import { makePartialTask } from "@/dto/task/dto";
 import { createTaskAction } from "@/actions/create-task-action";
-import { updateTaskAction } from "@/actions/update-task-action"; // <- certifique-se de criar/importar isso
+import { updateTaskAction } from "@/actions/update-task-action";
 import { toast } from "react-toastify";
 
 type Task = {
