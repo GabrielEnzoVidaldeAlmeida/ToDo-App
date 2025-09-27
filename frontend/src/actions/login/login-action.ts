@@ -22,7 +22,7 @@ export async function loginAction(state: LoginActionState, formData: FormData) {
     };
   }
 
-  await asyncDelay(5000); // pensar se diminuo ou removo
+  await asyncDelay(1000); // pensar se diminuo ou removo
 
   if (!(formData instanceof FormData)) {
     return {
