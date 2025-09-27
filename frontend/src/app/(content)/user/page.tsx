@@ -2,6 +2,7 @@ import { getCurrentUser } from "@/libs/login/manage-login";
 
 import UserProfileForm from "@/components/UserProfileForm";
 import Link from "next/link";
+import { DeleteUserButton } from "@/components/DeleteUserButton";
 
 export default async function userPage() {
   const user = await getCurrentUser();
@@ -17,6 +18,7 @@ export default async function userPage() {
       <UserProfileForm user={user} />
 
       <Link href="/user/update-password">Alterar senha</Link>
+      <DeleteUserButton />
     </div>
   );
 }
