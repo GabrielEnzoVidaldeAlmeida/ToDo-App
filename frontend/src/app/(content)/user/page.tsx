@@ -1,7 +1,7 @@
-// import { InputText } from "@/components/InputText";
 import { getCurrentUser } from "@/libs/login/manage-login";
 
 import UserProfileForm from "@/components/UserProfileForm";
+import Link from "next/link";
 
 export default async function userPage() {
   const user = await getCurrentUser();
@@ -15,6 +15,8 @@ export default async function userPage() {
     <div>
       <h1>Página de usuário</h1>
       <UserProfileForm user={user} />
+
+      <Link href="/user/update-password">Alterar senha</Link>
     </div>
   );
 }
